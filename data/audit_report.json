@@ -1,0 +1,107 @@
+{
+  "scope": {
+    "39": {
+      "papers": 22,
+      "questions": 210
+    },
+    "38": {
+      "papers": 24,
+      "questions": 239
+    },
+    "37": {
+      "papers": 28,
+      "questions": 265
+    },
+    "36": {
+      "papers": 25,
+      "questions": 253
+    },
+    "35": {
+      "papers": 26,
+      "questions": 250
+    },
+    "34": {
+      "papers": 17,
+      "questions": 164
+    },
+    "33": {
+      "papers": 18,
+      "questions": 179
+    },
+    "32": {
+      "papers": 12,
+      "questions": 133
+    },
+    "0": {
+      "papers": 24,
+      "questions": 240
+    }
+  },
+  "methods": {
+    "losslessSourcePixelComparison": true,
+    "printChapterContentComparison": true,
+    "nativeGlyphCoverage": true,
+    "sourcePairingAndHashes": true,
+    "nativeDrawingResourcesCompared": true
+  },
+  "checks": {
+    "source_questions": 1933,
+    "decodable_images": 7647,
+    "paired_sections": 3846,
+    "original_captures": 7605,
+    "topic_pdfs": 18,
+    "print_pages": 4110
+  },
+  "issues": [],
+  "reviewCandidates": [],
+  "automatedPassed": true,
+  "visualReviewComplete": true,
+  "finalReview": {
+    "complete": true,
+    "questions": 1933,
+    "collections": 196,
+    "topicBooks": 18,
+    "printPages": 4110,
+    "method": "Automatic source pairing, native glyph coverage, original crop pixel comparison and full print drawing resource comparison; visual inspection of flagged source boundaries, all topic booklet samples, edition transitions and official errata samples. Not a manual rereading of every printed page.",
+    "visuallyInspectedBoundaryPages": 22,
+    "questionWholeDiagramFixes": 20,
+    "answerWholeDiagramFixes": 1,
+    "bookletFirstPagesInspected": 18,
+    "additionalSamplePagesRendered": 58,
+    "officialErrataSourcePagesInspected": 6,
+    "chemicalRedrawing": false,
+    "resolved": [
+      "Cross-question floating original diagrams",
+      "Footer-cut original answer diagram",
+      "Greek-letter expressions mistaken for subquestion numbers",
+      "Three-digit number spacing",
+      "Small-font answer subquestion labels",
+      "Chemical diagram glyphs mistaken for a question title",
+      "Original practice 5-4 label referring to its own fourth subquestion",
+      "Trailing general abbreviation tables"
+    ],
+    "official32Corrections": [
+      "1-8",
+      "12-13",
+      "12-20",
+      "12-4",
+      "2-6",
+      "2-8",
+      "2-9",
+      "3-6",
+      "4-1",
+      "5-2"
+    ],
+    "publication": {
+      "status": "complete",
+      "publicationCommit": "8075b76ae32555dd4aa64ea07b98177ce09e296f",
+      "verifiedAtUtc": "2026-10-09T20:22:42.678446+00:00",
+      "questions": 1933,
+      "collections": 196,
+      "publicTopicPdfsVerified": 18,
+      "coreFilesVerified": 6,
+      "changedSourceImagesVerified": 484,
+      "sourceAndNumberingReviewComplete": true
+    }
+  }
+}

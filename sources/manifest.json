@@ -1,0 +1,168 @@
+{
+  "version": 2,
+  "editions": {
+    "39": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第39届Chemy化学奥林匹克竞赛模拟试题题目合集.pdf",
+          "sha256": "08fcd8f57cd3b5d5fce19712db54e83ea75aa2236d5e2c81b954ad631dcdbab3",
+          "bytes": 8861769
+        },
+        {
+          "kind": "a",
+          "filename": "第39届Chemy化学奥林匹克竞赛模拟试题参考答案合集.pdf",
+          "sha256": "dc6613857ca0be1f71f3133ed5aebbc0c2894be35b171e8851bfd03bce808f97",
+          "bytes": 15732647
+        }
+      ]
+    },
+    "36": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第36届化学奥林匹克Chemy模拟试题题目合集.pdf",
+          "sha256": "0a98fdb68b7d8b843df9e03b1d99e897342ad367622a70596d465bc6462e2f61",
+          "bytes": 7960202
+        },
+        {
+          "kind": "a",
+          "filename": "第36届化学奥林匹克Chemy模拟试题参考答案合集.pdf",
+          "sha256": "8232f34ea3f45ba7977f2bc04649bd1e48ede539830fa1fdb0354308d287c9ae",
+          "bytes": 11778774
+        }
+      ]
+    },
+    "35": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第35届中国化学奥林匹克Chemy题目合集.pdf",
+          "sha256": "2fec3e29b652cf0c277b03f522e04cc65a71f8f5a2a7e8223e372552adf57059",
+          "bytes": 7943473
+        },
+        {
+          "kind": "a",
+          "filename": "第35届中国化学奥林匹克Chemy参考答案合集.pdf",
+          "sha256": "05f8b7998e5436a194e44214d83bcdaa3a1cc695c16729f7e03e2e51f3615969",
+          "bytes": 11607713
+        }
+      ]
+    },
+    "38": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第38届Chemy题目合集.pdf",
+          "sha256": "f6446d67a39d5b49a192360322e936ee1949b74a8125e48259cd18eeefe6b9cd",
+          "bytes": 9737783
+        },
+        {
+          "kind": "a",
+          "filename": "第38届Chemy题目合集 答案.pdf",
+          "sha256": "8207190d3270557e487cdafe8d60d3b2a76257e7dd111822a5144ceebacb0487",
+          "bytes": 13863369
+        }
+      ]
+    },
+    "37": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第37届Chemy题目合集.pdf",
+          "sha256": "8da099a31533e4311586e1a08098641658becef6f466ce6661d267890e9c36d9",
+          "bytes": 9882318
+        },
+        {
+          "kind": "a",
+          "filename": "第37届Chemy题目合集 答案.pdf",
+          "sha256": "c27543d71718e5caadf670fa47ad4c942c09e86cae395c6f0d757a747fe48f77",
+          "bytes": 13921075
+        }
+      ]
+    },
+    "34": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第34届Chemy化学奥林匹克题目合集.pdf",
+          "sha256": "153ecd0eb0d9111c53138b25afac90e14a73eb16fc4849a4374a3a6fd245cbd5",
+          "bytes": 5630073
+        },
+        {
+          "kind": "a",
+          "filename": "第34届Chemy化学奥林匹克题目合集答案.pdf",
+          "sha256": "3c1af58fa1bd5b28998a13015bf12c1d86535bdfbfcc3e3499dfe3227502b7ad",
+          "bytes": 8144371
+        }
+      ]
+    },
+    "33": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第33届Chemy化学奥林匹克题目合集.pdf",
+          "sha256": "f9fc362542ebced77eccfcfa9cbca761516f43c74cb7804d6391c8ecaca24dd4",
+          "bytes": 2789769
+        },
+        {
+          "kind": "a",
+          "filename": "第33届Chemy化学奥林匹克题目合集答案.pdf",
+          "sha256": "147c2cc6a70faaf01ebe2b6b1db1ebb1efdd9eaf98c4948400c0a4030dd73775",
+          "bytes": 8586863
+        }
+      ]
+    },
+    "32": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "第32届中国化学奥林匹克Chemy题目合集.pdf",
+          "sha256": "fb320c9d05824fe5c8ed7982c312bcb18978b6692402584fc9088cc4cd432550",
+          "bytes": 3045999
+        },
+        {
+          "kind": "a",
+          "filename": "第32届中国化学奥林匹克Chemy题目合集答案.pdf",
+          "sha256": "e33b37f2eaec31411483a84c08e1de633d142c3ebfdc8d5248d39f9341452fdf",
+          "bytes": 4849105
+        },
+        {
+          "kind": "errata",
+          "filename": "第32届Chemy化学奥林匹克答案补正.pdf",
+          "sha256": "5d168b984bfdafa6985b10b619fda5c4692065e559c7b60ba48797ea3c38dfe9",
+          "bytes": 755066
+        }
+      ],
+      "workingFiles": [
+        {
+          "kind": "a",
+          "filename": "第32届Chemy答案（含官方补正工作源）.pdf",
+          "sha256": "d96ed2cd6794b0819f149a49aff6e690b65ef584b0b0be6e5a735bd8ed9e6d8d",
+          "bytes": 5439815,
+          "derivedFrom": [
+            "第32届中国化学奥林匹克Chemy题目合集答案.pdf",
+            "第32届Chemy化学奥林匹克答案补正.pdf"
+          ],
+          "recipe": "data/answer_corrections32.json"
+        }
+      ]
+    },
+    "0": {
+      "originalFiles": [
+        {
+          "kind": "q",
+          "filename": "Chemy化学奥林匹克竞赛联赛试题合集(1~24).pdf",
+          "sha256": "f12a8fa6a2b1c4eb9db01eec2133f7743123cbe1c363ba0a23c2a4f38f94afae",
+          "bytes": 7152278
+        },
+        {
+          "kind": "a",
+          "filename": "Chemy化学奥林匹克竞赛联赛参考答案合集(1~24).pdf",
+          "sha256": "18dce4b5774abff8e7c94f4a0b181b2a32adf2fc01e75e7632c8e4b6e75aa7bb",
+          "bytes": 10061154
+        }
+      ]
+    }
+  }
+}

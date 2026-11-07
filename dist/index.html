@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Chemy 化学竞赛专题题库</title>
+  <meta name="description" content="按九个化学专题、届次和试卷查找 Chemy 竞赛题目，搜索题干关键词，查看原卷参考答案，下载专题或自选题目 PDF。">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=question-font-v1">
+  <link rel="stylesheet" href="interface.css?v=watermark-v2-light">
+  <link rel="stylesheet" href="ai-paper.css?v=workspace-v2">
+  <script src="mirror.js?v=1" defer></script>
+  <script src="app.js?v=discussion-fold-v3" defer></script>
+  <script src="paper-engine.js?v=topic-conversation-v1" defer></script>
+  <script src="lecture-format.js?v=1" defer></script>
+  <script src="word-export.js?v=lecture-v3" defer></script>
+  <script src="ai-paper.js?v=workspace-v2" defer></script>
+  <link rel="stylesheet" href="account.css?v=forum-v1">
+  <script src="account.js?v=local-sdk-v1" defer></script>
+<link rel="stylesheet" href="forum.css?v=inline-replies-v4">
+  <script src="forum.js?v=inline-replies-v4" defer></script>
+</head>
+<body class="show-introduction">
+  <a class="skip" href="#reading">跳转到题目</a>
+  <header class="site-header">
+    <a class="site-brand" href="#about" aria-label="Chemy 化学竞赛专题题库首页"><img src="assets/chemy-wordmark.png" alt="CHEMY" width="120" height="48"><span>化学竞赛专题题库</span></a>
+    <div class="header-tools">
+      <button id="account-launch" type="button">登录 / 我的题库</button>
+      <button class="ai-launch" id="ai-launch" aria-haspopup="dialog" aria-controls="ai-dialog" disabled>AI 组卷</button>
+      <button class="search-launch" id="search-launch" aria-haspopup="dialog" aria-controls="search-dialog" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg><span class="search-placeholder">搜索题目标题或题干…</span><span class="search-short">查题</span><kbd>Ctrl K</kbd></button>
+      <a class="repository-link" href="https://github.com/BruceJLLpku/Chemy-" target="_blank" rel="noopener">源文件</a>
+    </div>
+  </header>
+  <aside class="sidebar" id="sidebar" aria-label="专题" tabindex="-1">
+    <a class="about-link" id="about-link" href="#about" aria-current="page">介绍与使用</a>
+    <div class="panel-heading"><h2>专题</h2><button class="panel-close" data-close-panel aria-label="关闭专题目录">×</button></div>
+    <nav id="categories" aria-label="化学专题"></nav>
+    <a class="category favorites-nav" id="favorites-link" href="#favorites">我的收藏 <span id="favorites-nav-count">0</span></a>
+    <a class="category" href="#history" data-community-view="history">组卷历史</a><a class="category" href="#forum" data-community-view="forum">题目讨论</a><a class="category" href="#notifications" data-community-view="notifications">消息 <span id="forum-unread">0</span></a><a class="category" href="#admin" data-community-view="admin" id="forum-admin-link" hidden>论坛管理</a>
+    <div class="sidebar-bottom" id="library-status">正在加载题库…</div>
+  </aside>
+  <aside class="directory-pane" id="directory-pane" aria-label="题目目录" tabindex="-1">
+    <div class="panel-heading"><h2>题目目录</h2><button class="panel-close" data-close-panel aria-label="关闭题目目录">×</button></div>
+    <form class="number-jump" id="number-jump"><label class="sr-only" for="question-number">当前专题题号</label><input id="question-number" type="text" inputmode="numeric" autocomplete="off" placeholder="输入专题题号" aria-describedby="number-status"><button type="submit" disabled>跳转</button></form>
+    <p id="number-status" class="field-status" role="status"></p>
+    <div class="directory-filters"><label class="sr-only" for="edition-select">筛选届次</label><select id="edition-select" disabled><option value="all">全部届次</option></select><label class="sr-only" for="paper-select">筛选试卷</label><select id="paper-select" disabled><option value="all">全部试卷</option></select></div>
+    <p class="directory-count" id="directory-count" role="status"></p>
+    <nav class="directory-tree" id="directory-tree" aria-label="按届次和试卷排列的题目"><p class="loading-note">正在加载目录…</p></nav>
+  </aside>
+  <div class="overlay" id="overlay" hidden></div>
+  <main class="app-main" id="main">
+    <div class="browse-tools"><button id="topic-toggle" aria-expanded="false" aria-controls="sidebar">专题</button><button id="directory-toggle" aria-expanded="false" aria-controls="directory-pane">题目目录</button><button id="return-search" hidden>返回搜索结果</button></div>
+    <section id="community-content" tabindex="-1" hidden></section>
+    <section class="introduction" id="introduction" aria-labelledby="introduction-title" tabindex="-1">
+      <h1 id="introduction-title">写在前面</h1>
+      <p class="intro-lead">这个网站，起于备赛时的一个小小愿望。</p>
+      <p>Chemy 的题目逐年积累，许多题目设计精巧，既值得细细推敲，也有扎实的训练价值。然而，竞赛生的时间终究有限，能专门拿出三个小时、从头到尾完成的套卷，只能是其中一部分。我常想，能不能把这些好题按专题整理起来，让大家循着自己的薄弱之处，找到最需要的练习？</p>
+      <p>那时，我就曾尝试整理这样的专题卷：晶体掌握得不够扎实，就在一道道晶体题中厘清概念；结构推断尚不熟练，就沿着一条条线索磨炼思路。把散落在不同年份、不同试卷里的题目汇集起来，让更多好题有机会被认真做过，也让零散的解题经验，慢慢沉淀成自己的方法。</p>
+      <p>后来我发现，每年都有同学怀着同样的愿望。如今，借助Vibe Coding，当年的想法终于有了落地的机会，于是便有了这个网站。我想把整理好的专题题目开源分享出来，让大家少一些搜寻与翻找，多一些专注与思考。你可以在线读题，也可以单题下载，或从不同试卷中选出需要的题目，合成一份连续排版的 PDF，打印成自己的练习卷。愿这些练习能帮你补齐短板，也愿你在反复推敲之后，收获豁然开朗的欣喜，渐渐看见化学严密而又生动的美。</p>
+      <p>我是广东 2023 届的鹈鹕。曾经，我在一所竞赛资源有限的学校学习化学竞赛。Chemy 上一套又一套的题目，陪伴我从弱校走进省队、拿到金牌，也为我后来走进北京大学化学与分子工程学院打下了基础。感谢 Chemy 将这些题目公开分享，让当年的我，在学校所能提供的资源之外，仍有继续向前的可能。如今整理这些专题，也是想把曾经收到的帮助，再递到后来同学的手中。愿你从这里出发，走出属于自己的竞赛之路。</p>
+      <section class="intro-usage" aria-labelledby="usage-title">
+        <h2 id="usage-title">题库与使用</h2>
+        <p><strong>按目录找题。</strong>选择专题后，在“题目目录”中按届次、试卷展开，点击题目名称即可阅读。可以筛选某一届或某份试卷；知道专题题号时，在“输入专题题号”中输入数字，点击“跳转”。网页与 PDF 使用相同的专题编号，筛选后编号不变。</p>
+        <p><strong>按关键词找题。</strong>点击顶部搜索框，输入知识点、题目名称或题干中的词语，如“电极电势”“EDTA”。多个关键词用空格分隔，可查找同时包含这些词的题目；也可以限定专题、届次和试卷，或勾选“同时搜索答案”。点击搜索结果阅读原题，看完后点击“返回搜索结果”继续查找。图片中的文字与结构式可能搜不到。</p>
+        <p><strong>阅读题目与答案。</strong>每道题下方都有“查看参考答案”，点击即可展开答案与评分细则。题目标题下方标有原卷出处，方便回查。</p>
+        <p><strong>下载单题或自选练习卷。</strong>点击“下载本题 PDF”可保存一道题。需要多道题时，打开“按题目 / 试卷选题”，按题号与名称勾选，也可整卷、整届勾选；选择“全部专题”后，可跨专题选题或一次勾选某一届全部试卷的题目。窗口可按题名或专题题号筛选，如“12、15-18”。选好后点击“下载选题 PDF”，再点击“生成并下载 PDF”。所选题目按专题与题号连续排版，保留编号与出处，只含题目，不附答案。</p>
+        <p><strong>下载整个专题。</strong>点击“专题题目 PDF”或“专题答案 PDF”，分别保存完整的题目册与答案册。这两个按钮下载本专题全部题目或答案，不受当前届次、试卷筛选影响。题与题连续排版，页满后自然换页，方便打印练习与对照答案。</p>
+      </section>
+      <a class="intro-browse" href="#organic">浏览专题题目</a>
+      <footer class="copyright">题目与参考答案版权归 Chemy 化学奥林匹克团队原命题组所有，仅供学术交流使用，请勿用于任何形式的商业用途。</footer>
+    </section>
+    <div class="reading" id="reading" tabindex="-1" hidden>
+      <img class="reader-watermark" src="assets/chemy-watermark.jpg" alt="" aria-hidden="true" width="786" height="841">
+      <div class="topic-head"><div><h1 id="topic-title">化学竞赛专题题库</h1><p id="topic-summary" role="status">正在加载题库，请稍候…</p></div><div class="downloads" id="downloads"></div></div>
+      <div class="selection-tools" id="selection-tools"><button id="select-visible" aria-haspopup="dialog" aria-controls="question-picker">按题目 / 试卷选题</button><span id="selection-count" role="status">已选 0 题</span><button id="download-selected" disabled>下载选题 PDF</button><button id="clear-selection" disabled>清空</button></div>
+      <section id="favorites-controls" hidden aria-label="收藏筛选"><div class="account-actions"><label>专题<select id="favorites-topic"><option value="all">全部专题</option></select></label><label>搜索收藏<input id="favorites-search" type="search" placeholder="题名、题干关键词"></label></div><label class="auto-favorite-label"><input type="checkbox" data-auto-favorite checked>保存或下载组卷后自动收藏</label><p id="favorites-status" role="status"></p><button id="favorites-login" type="button">登录查看收藏</button><div class="account-actions"><button id="favorites-prev">上一页</button><span id="favorites-page"></span><button id="favorites-next">下一页</button></div></section>
+      <div id="questions" aria-busy="true"><p class="loading-note">正在读取题目与编号…</p></div>
+      <footer class="copyright">题目与参考答案来源：Chemy 化学奥林匹克团队，第32～39届试题合集与 Chemy 联赛。版权归原命题组所有，仅供学术交流使用，请勿用于任何形式的商业用途。</footer>
+    </div>
+  </main>
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-heading"><h2 id="search-title">查找题目</h2><button id="search-close" class="dialog-close" aria-label="关闭搜索">×</button></div>
+    <form id="search-form" class="search-form"><label class="sr-only" for="search-input">题目关键词</label><input id="search-input" type="search" placeholder="输入关键词，如：铁 电势、LiFePO4" autocomplete="off"><button type="submit">搜索</button></form>
+    <div class="search-filters"><label>专题<select id="search-topic"><option value="all">全部专题</option></select></label><label>届次<select id="search-edition"><option value="all">全部届次</option></select></label><label>试卷<select id="search-paper"><option value="all">全部试卷</option></select></label><label class="answer-search"><input id="search-answers" type="checkbox">同时搜索答案</label></div>
+    <p class="search-help">多个关键词用空格分隔，结果需同时包含这些词。仅检索已有文字，图片内文字可能无法查到。</p>
+    <p id="search-status" class="search-status" role="status" aria-live="polite">输入关键词，搜索全部题目。</p>
+    <div class="search-results" id="search-results" tabindex="0" aria-label="搜索结果"></div>
+  </dialog>
+  <dialog class="picker-dialog" id="question-picker" aria-labelledby="picker-title">
+    <div class="search-heading"><h2 id="picker-title">选择题目与试卷</h2><button id="picker-close" class="dialog-close" aria-label="关闭选题窗口">×</button></div>
+    <p class="picker-help">勾选题号与名称选单题，勾选届次或试卷选整组。选择“全部专题”后，可一次选中某一届的所有试卷。</p>
+    <div class="picker-filters"><label>专题<select id="picker-topic"></select></label><label>届次<select id="picker-edition"></select></label><label class="picker-query-label">名称 / 专题题号<input id="picker-query" type="search" placeholder="题目名称或题号，如 12、15-18" autocomplete="off"></label></div>
+    <label class="auto-favorite-label"><input type="checkbox" data-auto-favorite checked>保存或下载组卷后自动收藏</label><div class="picker-batch"><label><input type="checkbox" id="picker-all">全选筛选结果</label><label><input type="checkbox" id="picker-favorites-only">仅我的收藏</label><span id="picker-result-count" role="status"></span><label><input type="checkbox" id="picker-selected-only">只看已选</label></div>
+    <div class="picker-tree" id="picker-tree" aria-label="按届次与试卷勾选题目"></div>
+    <div class="picker-footer"><span id="picker-selection-count" role="status" aria-live="polite">已选 0 题</span><button id="picker-clear">清空已选</button><button id="picker-done">完成选题</button><button id="picker-download" disabled>下载选题 PDF</button></div>
+  </dialog>
+  <dialog class="export-dialog" id="export-dialog" aria-labelledby="export-title">
+    <div class="search-heading"><h2 id="export-title">下载选题 PDF</h2><button id="export-close" class="dialog-close" aria-label="关闭选题下载">×</button></div>
+    <p class="export-help">题目和参考答案可分别下载，均按同一选题清单排列，保留原有编号与出处。连续排版，页满时自然换页。</p>
+    <ul id="export-list" class="export-list" aria-label="将要下载的题目"></ul>
+    <p class="export-help">首次下载需读取相关专题题册，可能需要稍候。关闭窗口可取消生成。</p>
+    <p id="export-status" role="status" aria-live="polite"></p>
+    <div class="export-actions"><button id="export-start">下载题目 PDF</button><button id="export-answers">下载答案 PDF</button><button id="export-cancel">取消</button></div>
+  </dialog>
+  <dialog class="ai-dialog" id="ai-dialog" aria-labelledby="ai-title">
+    <header class="search-heading ai-chat-header">
+      <div><h2 id="ai-title">Chemy 组卷助手</h2><p id="ai-mode" role="status">正在读取组卷服务配置…</p></div>
+      <div class="ai-header-actions">
+        <button type="button" id="ai-paper-toggle" aria-controls="ai-result" aria-expanded="false" hidden>查看试卷</button>
+        <button type="button" id="ai-new">新对话</button>
+        <button type="button" id="ai-close" class="dialog-close" aria-label="关闭 AI 组卷">×</button>
+      </div>
+    </header>
+    <div class="ai-workspace">
+      <div class="ai-chat-column">
+        <div class="ai-scroll" id="ai-chat-scroll">
+          <div class="ai-chat-content">
+            <div id="ai-welcome">
+              <h3>今天想组一套什么卷？</h3>
+              <p class="ai-lead" id="ai-lead">输入想练习的知识点，从 Chemy 题库中选题。</p>
+              <div class="ai-starters" aria-label="组卷示例">
+                <button type="button" data-ai-prompt="组 5 道晶体化学题，从基础到进阶，卷首整理相关知识点。"><strong>准备一份讲义</strong><span>晶体化学 · 知识梳理与练习</span></button>
+                <button type="button" data-ai-prompt="组一套同时包含化学方程式和元素化学的卷子，共 5 道题，兼顾不同知识点。"><strong>组合多个主题</strong><span>化学方程式与元素化学</span></button>
+                <button type="button" data-ai-prompt="组 5 道羟醛缩合题，由浅入深，加入简洁的知识介绍和关键公式。"><strong>做一次专题训练</strong><span>羟醛缩合 · 由浅入深</span></button>
+              </div>
+              <p id="ai-coverage" class="ai-hint" role="status"></p>
+              <section class="ai-discovery" aria-label="可用组卷知识点">
+                <p class="ai-discovery-label">试试这些知识点 <span>点击即可组卷</span></p>
+                <div id="ai-suggested" class="ai-candidates"></div>
+                <details id="ai-knowledge-browser">
+                  <summary id="ai-knowledge-summary">查看可用知识点</summary>
+                  <label class="sr-only" for="ai-knowledge-search">搜索可用知识点名称或同义词</label>
+                  <input id="ai-knowledge-search" type="search" maxlength="100" placeholder="搜索名称或同义词，例如 Aldol、NMR" autocomplete="off">
+                  <p id="ai-knowledge-count" class="ai-hint" role="status" aria-live="polite"></p>
+                  <div id="ai-knowledge-list" class="ai-knowledge-list" aria-label="知识点及可用题数"></div>
+                </details>
+              </section>
+            </div>
+            <div id="ai-turns" role="log" aria-label="组卷对话记录"></div>
+            <div id="ai-status" class="ai-status" role="status" aria-live="polite"></div>
+            <button type="button" id="ai-retry" hidden>重试这条消息</button>
+            <div id="ai-candidates" class="ai-candidates" aria-label="候选知识点"></div>
+          </div>
+        </div>
+        <form id="ai-form" class="ai-composer">
+          <label class="sr-only" for="ai-query">给组卷助手发送消息</label>
+          <textarea id="ai-query" rows="2" placeholder="描述你想要的试卷…" maxlength="200" required></textarea>
+          <div class="ai-composer-actions">
+            <details class="ai-advanced"><summary>组卷设置</summary><div class="ai-settings">
+                <label><input type="checkbox" id="ai-favorites-only">仅从我的收藏选题（按知识点匹配）</label>
+                <label class="auto-favorite-label"><input type="checkbox" data-auto-favorite checked>保存或下载组卷后自动收藏</label>
+                <div class="ai-filters">
+                  <label>大题数量<input id="ai-count" type="number" min="1" max="50" step="1" value="5" required></label>
+                  <label>专题<select id="ai-topic"><option value="all">全部专题</option></select></label>
+                  <label>届次<select id="ai-edition"><option value="all">全部届次</option></select></label>
+                  <label>原试卷<select id="ai-paper"><option value="all">全部试卷</option></select></label>
+                </div>
+            </div></details>
+            <button id="ai-cancel" type="button" hidden>停止</button>
+            <button id="ai-generate" type="submit" aria-label="发送消息">发送 <span aria-hidden="true">↑</span></button>
+          </div>
+          <p class="ai-composer-hint">Enter 发送 · Shift + Enter 换行</p>
+        </form>
+      </div>
+      <section id="ai-result" class="ai-scroll" hidden aria-labelledby="ai-result-title">
+        <div class="ai-result-heading"><h3 id="ai-result-title"></h3><p id="ai-result-count"></p></div>
+        <div class="ai-actions">
+          <details class="ai-download-menu"><summary>下载与打印</summary><div class="ai-download-options">
+            <p>Word <small>下载后可编辑</small></p>
+            <button type="button" data-ai-word="questions">下载题目 Word</button><button type="button" data-ai-word="answers">下载答案 Word</button>
+            <p>PDF <small>保留原卷版式</small></p>
+            <button type="button" data-ai-export="questions">下载题目 PDF</button><button type="button" data-ai-export="answers">下载答案 PDF</button>
+            <p>直接打印</p>
+            <button type="button" data-ai-print="questions">打印题目</button><button type="button" data-ai-print="answers">打印答案</button>
+          </div></details>
+          <button type="button" id="ai-undo" disabled>撤销修改</button>
+          <button type="button" id="ai-reroll">重新组卷</button>
+        </div>
+        <p id="ai-export-status" class="ai-hint" role="status" aria-live="polite"></p>
+        <nav class="ai-paper-nav" aria-label="试卷阅读工具"><label>跳转到 <select id="ai-jump" aria-label="跳转到试卷题目"></select></label><button type="button" id="ai-answers-toggle" aria-pressed="false">展开全部答案</button></nav>
+        <div class="ai-paper-body">
+          <section id="ai-paper-intro" class="ai-paper-intro" hidden>
+            <h4>知识介绍</h4><div class="q-body ai-paper-intro-text"></div>
+          </section>
+          <div id="ai-items"></div>
+        </div>
+      </section>
+    </div>
+  </dialog>
+  <section id="ai-print" hidden></section>
+</body>
+</html>

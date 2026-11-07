@@ -1,0 +1,754 @@
+{
+  "completed": [
+    {
+      "edition": 38,
+      "paper": 1,
+      "sha": "aa88fe6bad592cf0d0641d29542b0ccc294c2baa",
+      "seconds": 2382
+    },
+    {
+      "edition": 38,
+      "paper": 2,
+      "sha": "2062828bb60ae57df9836c4fc25a9dee93766153",
+      "seconds": 578
+    },
+    {
+      "edition": 38,
+      "paper": 3,
+      "sha": "b6cc0d8b12c2e342c1c8a4533fc7caa2a4fc6866",
+      "seconds": 541
+    },
+    {
+      "edition": 38,
+      "paper": 4,
+      "sha": "dba849b3be90a92b7aa7dfc80339e1ae22c45313",
+      "seconds": 418
+    },
+    {
+      "edition": 38,
+      "paper": 5,
+      "sha": "c9eaed04b7305685af557f50d8bf2e0eb88aa048",
+      "seconds": 752
+    },
+    {
+      "edition": 38,
+      "paper": 6,
+      "sha": "98ddf60fe193d395d745edf0b76747e7e37b8c74",
+      "seconds": 631
+    },
+    {
+      "edition": 38,
+      "paper": 7,
+      "sha": "a86405689d0e3957576cf743498688d25d99525b",
+      "seconds": 576
+    },
+    {
+      "edition": 38,
+      "paper": 8,
+      "sha": "d6272b494a2a9ade666e14abd2f861d1598ac7bc",
+      "recovery": "duplicate PDF resources shared without changing rendering"
+    },
+    {
+      "edition": 38,
+      "paper": 9,
+      "sha": "979f7ba4f4e1d0bd8551cf120ded9dd4b26def1a",
+      "seconds": 811
+    },
+    {
+      "edition": 38,
+      "paper": 10,
+      "sha": "870f30700ba3d947268b357d1b81c4141b757338",
+      "seconds": 644
+    },
+    {
+      "edition": 38,
+      "paper": 11,
+      "sha": "d4ad71d15359d216a0e78c2afb0fe60a7f52d593",
+      "seconds": 670
+    },
+    {
+      "edition": 38,
+      "paper": 12,
+      "sha": "2120d9615c6c20a6e95739d4de080abe6948f9bd",
+      "seconds": 465
+    },
+    {
+      "edition": 38,
+      "paper": 13,
+      "sha": "49ec5d57d18fff3c5298c7e5ba28626433fb08ef",
+      "seconds": 412
+    },
+    {
+      "edition": 38,
+      "paper": 14,
+      "sha": "0c78983dd7a23650f243b5c311abab9f91c2edf0",
+      "seconds": 329
+    },
+    {
+      "edition": 38,
+      "paper": 15,
+      "sha": "5fb7b2fb64060436420455454b571d9798204ed5",
+      "seconds": 355
+    },
+    {
+      "edition": 38,
+      "paper": 16,
+      "sha": "2c8d11e332e161aab8e197cb6dffe1965a2a00c7",
+      "seconds": 334
+    },
+    {
+      "edition": 38,
+      "paper": 17,
+      "sha": "8c5939058a12d7eb8439862ff984b38d2017cb3b",
+      "seconds": 336
+    },
+    {
+      "edition": 38,
+      "paper": 18,
+      "sha": "76258f4c882647f950fd12f7ac8596a3bfbd4885",
+      "seconds": 345
+    },
+    {
+      "edition": 38,
+      "paper": 19,
+      "sha": "99fe17200308d88b7d096b79e2f554c95ee473b0",
+      "seconds": 342
+    },
+    {
+      "edition": 38,
+      "paper": 20,
+      "sha": "1915d349376a2f3ec5ee16ac0aee2f4eb6e78f52",
+      "seconds": 386
+    },
+    {
+      "edition": 38,
+      "paper": 21,
+      "sha": "d516198c29f63144bd241022a64e8e9ae23da5f9",
+      "seconds": 362
+    },
+    {
+      "edition": 38,
+      "paper": 22,
+      "sha": "6fb60374980df93c07dfb3b1af3142b3ec46d3d0",
+      "seconds": 297
+    },
+    {
+      "edition": 38,
+      "paper": 23,
+      "sha": "7caf1c7b4a2d5b4a83a420d9344cb7380fbb0c20",
+      "seconds": 318
+    },
+    {
+      "edition": 38,
+      "paper": 24,
+      "sha": "835464e872fd5173d9603a58c8f11b9abd8fdc7b",
+      "seconds": 430
+    },
+    {
+      "edition": 37,
+      "paper": 1,
+      "sha": "bd7911a63b818d83b7ef3aeb465b24c9645060d5",
+      "seconds": 348
+    },
+    {
+      "edition": 37,
+      "paper": 2,
+      "sha": "f0e54b3a748b0d2e047040c37420dde7d8a51bc1",
+      "seconds": 317
+    },
+    {
+      "edition": 37,
+      "paper": 3,
+      "sha": "7e3aa38d70195aace2a4c578531bcd87e1cfd0de",
+      "seconds": 333
+    },
+    {
+      "edition": 37,
+      "paper": 4,
+      "sha": "e6ad3467d0185fd860afbb85a8e242f729ebffd8",
+      "seconds": 352
+    },
+    {
+      "edition": 37,
+      "paper": 5,
+      "sha": "ab634ad2a72c254a6d2f08d6103e27e69a3510e3",
+      "seconds": 317
+    },
+    {
+      "edition": 37,
+      "paper": 6,
+      "sha": "5a404002cab26c13baf9c2a982fe065d0b3a851e",
+      "seconds": 306
+    },
+    {
+      "edition": 37,
+      "paper": 7,
+      "sha": "3a546457fc1852e6a4fd79be6835717ccebdd93b",
+      "seconds": 245
+    },
+    {
+      "edition": 37,
+      "paper": 8,
+      "sha": "5d928f9ffe08ba1115290c9a4e37d1da1783776c",
+      "seconds": 344
+    },
+    {
+      "edition": 37,
+      "paper": 9,
+      "sha": "800c2b9682443b37ac820b40bdccb49d6bc731f5",
+      "seconds": 393
+    },
+    {
+      "edition": 37,
+      "paper": 10,
+      "sha": "41bef95d741115f18ab69d659c991104c68eb73b",
+      "seconds": 225
+    },
+    {
+      "edition": 37,
+      "paper": 11,
+      "sha": "e65663f414af6ead5ad03383299c1706160ce866",
+      "seconds": 222
+    },
+    {
+      "edition": 37,
+      "paper": 12,
+      "sha": "0fa7f9d7a74937505cb412a4cea6517419fb8acc",
+      "seconds": 326
+    },
+    {
+      "edition": 37,
+      "paper": 13,
+      "sha": "88ad02f1f0a3757a8ea34328c8dbbff3a184b7d2",
+      "seconds": 322
+    },
+    {
+      "edition": 37,
+      "paper": 14,
+      "sha": "9f34d665b4510dc2498fff6fb6f6c3b0c9a85e58",
+      "seconds": 319
+    },
+    {
+      "edition": 37,
+      "paper": 15,
+      "sha": "65a0e6df0a8af36a062a309eee02c7e2c0bce1ff",
+      "seconds": 271
+    },
+    {
+      "edition": 37,
+      "paper": 16,
+      "sha": "a88a914094f56a0e54b6db5215263f80d2fd2715",
+      "seconds": 315
+    },
+    {
+      "edition": 37,
+      "paper": 17,
+      "sha": "cdedd932533dc717cfeaadbcce3acf46e2e49443",
+      "seconds": 279
+    },
+    {
+      "edition": 37,
+      "paper": 18,
+      "sha": "32ce3432f7e405843d205d81837cb1484c83ad69",
+      "seconds": 176
+    },
+    {
+      "edition": 37,
+      "paper": 19,
+      "sha": "0509e978e129863e977b648ddf8b7dcb39e59e59",
+      "seconds": 315
+    },
+    {
+      "edition": 37,
+      "paper": 20,
+      "sha": "f39b02996679e1f3c3fe2feea268a4167d202014",
+      "recovered": true
+    },
+    {
+      "edition": 37,
+      "paper": 21,
+      "sha": "44137752a11f3cd7dcf400ed40b04e1927f64ed0",
+      "seconds": 232
+    },
+    {
+      "edition": 37,
+      "paper": 22,
+      "sha": "9e3ef852b20a2dad15721f2d9aef709ec2fcf677",
+      "seconds": 267
+    },
+    {
+      "edition": 37,
+      "paper": 23,
+      "sha": "306abce9841127a6c48fe5a9be7c1fb9cfcbe182",
+      "seconds": 287
+    },
+    {
+      "edition": 37,
+      "paper": 24,
+      "sha": "4018e2b0537f45b5a5db2365754488fad4986bd9",
+      "seconds": 230
+    },
+    {
+      "edition": 37,
+      "paper": 25,
+      "sha": "58b4ada8489a2ff77738f079a4674bf1e1e80c32",
+      "seconds": 293
+    },
+    {
+      "edition": 37,
+      "paper": 26,
+      "sha": "8c010a2ae6e5a8a96a0769cfab3c3466efaf9640",
+      "seconds": 265
+    },
+    {
+      "edition": 37,
+      "paper": 27,
+      "sha": "2cf42f6a93a8b1c80461f63b47ae7005f79cf5b0",
+      "seconds": 276
+    },
+    {
+      "edition": 37,
+      "paper": 28,
+      "sha": "3e35eac45e0f47c57cf597a9b9f3192ce1b52acf",
+      "seconds": 259
+    },
+    {
+      "edition": 34,
+      "paper": 1,
+      "sha": "67835b2175525646e897c538a08c70b7fcb419c8",
+      "seconds": 217
+    },
+    {
+      "edition": 34,
+      "paper": 2,
+      "sha": "4f659ec30402ad080e58fe0236e5b19eabbdd8d1",
+      "seconds": 184
+    },
+    {
+      "edition": 34,
+      "paper": 3,
+      "sha": "fc62d4c21bb47fb6ad17c2ffa3ccf0d25ca4b89e",
+      "seconds": 181
+    },
+    {
+      "edition": 34,
+      "paper": 4,
+      "sha": "c038edc37891f1b1c6026cdadf23cc1c2b949026",
+      "seconds": 233
+    },
+    {
+      "edition": 34,
+      "paper": 5,
+      "sha": "ea1b8c6ac0cf1973e8939ee8128960d0e61bd4d1",
+      "seconds": 232
+    },
+    {
+      "edition": 34,
+      "paper": 6,
+      "sha": "f4ac3cdeb41f3c4d1d7a413d5c35bebe0b057461",
+      "seconds": 201
+    },
+    {
+      "edition": 34,
+      "paper": 7,
+      "sha": "8280227397f3cb400877bddfa718843142e04ace",
+      "seconds": 214
+    },
+    {
+      "edition": 34,
+      "paper": 8,
+      "sha": "7af80fed5459d0d22c463f6180cfc7fd662de663",
+      "seconds": 221
+    },
+    {
+      "edition": 34,
+      "paper": 9,
+      "sha": "6cdddfe43645ffae8fe7d96a605d2884c298365f",
+      "seconds": 229
+    },
+    {
+      "edition": 34,
+      "paper": 10,
+      "sha": "b8ad0c5feef1b1dc9a60d8ee717a24ea0b08437f",
+      "seconds": 242
+    },
+    {
+      "edition": 34,
+      "paper": 11,
+      "sha": "ac0bffd5f1e213c5a4bdc0b5cdf77709e38d8c73",
+      "seconds": 234
+    },
+    {
+      "edition": 34,
+      "paper": 12,
+      "sha": "1ce36a36bb83539b1513ac4f7b7488248e264db6",
+      "seconds": 155
+    },
+    {
+      "edition": 34,
+      "paper": 13,
+      "sha": "e7493b2318cacc66105f5bd602a7b5546c7a37ad",
+      "seconds": 159
+    },
+    {
+      "edition": 34,
+      "paper": 14,
+      "sha": "7059ee883b252a8e81096a9e8ff8f27f92683b21",
+      "seconds": 230
+    },
+    {
+      "edition": 34,
+      "paper": 15,
+      "sha": "f6bda3d6b1db34a7842df711ea2f478e5c919a98",
+      "seconds": 218
+    },
+    {
+      "edition": 34,
+      "paper": 16,
+      "sha": "3b7e27e6bc553584025e67d5850a9615fb65fd14",
+      "seconds": 225
+    },
+    {
+      "edition": 34,
+      "paper": 17,
+      "sha": "055f1b54c5c334f3405e0923b7eb35854fe9c782",
+      "seconds": 231
+    },
+    {
+      "edition": 33,
+      "paper": 1,
+      "sha": "32eca000d059f5346c513f6e4caa2a36261d1924",
+      "seconds": 237
+    },
+    {
+      "edition": 33,
+      "paper": 2,
+      "sha": "a59425b053fac357fd2546f7c7ea195f8894a8fb",
+      "seconds": 198
+    },
+    {
+      "edition": 33,
+      "paper": 3,
+      "sha": "0daecab9d8becf4e567c473a3df3903e36fac093",
+      "seconds": 221
+    },
+    {
+      "edition": 33,
+      "paper": 4,
+      "sha": "b0a433642f794f933491a23a847f2b72272e89f5",
+      "seconds": 228
+    },
+    {
+      "edition": 33,
+      "paper": 5,
+      "sha": "9d72906d1a1493a6aa4b65bc9a2aba5acf4fb01a",
+      "seconds": 231
+    },
+    {
+      "edition": 33,
+      "paper": 6,
+      "sha": "f73ef22af504db8373a65d52484c2427e9e87855",
+      "seconds": 205
+    },
+    {
+      "edition": 33,
+      "paper": 7,
+      "sha": "f2355a00deaea3b739edf2318c15da70aede3865",
+      "seconds": 237
+    },
+    {
+      "edition": 33,
+      "paper": 8,
+      "sha": "74e4f2006f8bd05146e4a16f0bc9e310c26a3399",
+      "seconds": 225
+    },
+    {
+      "edition": 33,
+      "paper": 9,
+      "sha": "2222ec88a8463114ea9a076bf14c57d98c903a0c",
+      "seconds": 220
+    },
+    {
+      "edition": 33,
+      "paper": 10,
+      "sha": "49a7d660dc8626ee8eac0a78ae517e53e8a09038",
+      "seconds": 175
+    },
+    {
+      "edition": 33,
+      "paper": 11,
+      "sha": "237da1513ea1287cb9484d17e8b836458cc0b384",
+      "seconds": 166
+    },
+    {
+      "edition": 33,
+      "paper": 12,
+      "sha": "1eb86436b83fdb5b06a103f0d15dae415d619d45",
+      "seconds": 197
+    },
+    {
+      "edition": 33,
+      "paper": 13,
+      "sha": "c7abddd7065cdd975eb6978ac3455e29280edcaa",
+      "seconds": 196
+    },
+    {
+      "edition": 33,
+      "paper": 14,
+      "sha": "96ca9b20bed2be727878a84a12118a39f53c32bc",
+      "seconds": 184
+    },
+    {
+      "edition": 33,
+      "paper": 15,
+      "sha": "a148741b8261d74cf2a0e242f6cde30694f20694",
+      "seconds": 228
+    },
+    {
+      "edition": 33,
+      "paper": 16,
+      "sha": "fb2af6b95e28a0577761a86e3c862e709ed21c35",
+      "seconds": 265
+    },
+    {
+      "edition": 33,
+      "paper": 17,
+      "sha": "745a8d380feb2cceb2187d4abd43246ffdceeadd",
+      "seconds": 238
+    },
+    {
+      "edition": 33,
+      "paper": 18,
+      "sha": "fabdd3598ed564a78a943307dcba9c780b9ca08e",
+      "seconds": 269
+    },
+    {
+      "edition": 32,
+      "paper": 1,
+      "sha": "bb38f81bdbc8c2609e7c0a1a2f137b9ef6649b19",
+      "seconds": 289
+    },
+    {
+      "edition": 32,
+      "paper": 2,
+      "sha": "d5858ab2d0ca5ce30502108b5a2cf9bf0d413a25",
+      "seconds": 439,
+      "printRecovery": true
+    },
+    {
+      "edition": 32,
+      "paper": 3,
+      "sha": "51f19750f2c014372d56f1dadd16941f24e05503",
+      "publicationRecovery": true
+    },
+    {
+      "edition": 32,
+      "paper": 4,
+      "sha": "a844a9181dfed1d8ac06dda60bb128c52c956ae4",
+      "seconds": 250
+    },
+    {
+      "edition": 32,
+      "paper": 5,
+      "sha": "b52af6f87b875bfbe9da3c82e7dec99d179425f4",
+      "seconds": 250
+    },
+    {
+      "edition": 32,
+      "paper": 6,
+      "sha": "12efe9e0f26f8f7dfa624f1716c1f2f5cfacc618",
+      "seconds": 321
+    },
+    {
+      "edition": 32,
+      "paper": 7,
+      "sha": "6fe43ab431f2ec96eb53c86638123582f3f3fa19",
+      "seconds": 245
+    },
+    {
+      "edition": 32,
+      "paper": 8,
+      "sha": "d56a0836cd2158473f8b3843e39b4282dd4dced3",
+      "seconds": 236
+    },
+    {
+      "edition": 32,
+      "paper": 9,
+      "sha": "b461481881d7e1f94f43eb94e015ac5319fb5896",
+      "seconds": 236
+    },
+    {
+      "edition": 32,
+      "paper": 10,
+      "sha": "ef981be2edcbf71575d2be60f6538c46d4bb9109",
+      "seconds": 216
+    },
+    {
+      "edition": 32,
+      "paper": 11,
+      "sha": "3b2bb609de0aa3816d4974fb59ebb1dd7677eb5c",
+      "seconds": 252
+    },
+    {
+      "edition": 32,
+      "paper": 12,
+      "sha": "97f3c8c31dec0a5cf62090063ed2e0a645a8190f",
+      "seconds": 310
+    },
+    {
+      "edition": 0,
+      "paper": 1,
+      "sha": "1b5fb0a929d52edb10b346ae40e8daa69b8b90b8",
+      "seconds": 263
+    },
+    {
+      "edition": 0,
+      "paper": 2,
+      "sha": "7bb70175653a04c5ac6d63b4892607ba7bbfa108",
+      "seconds": 323
+    },
+    {
+      "edition": 0,
+      "paper": 3,
+      "sha": "50d12f1340027e6bdb0254e2de0a55d67417f672",
+      "seconds": 244
+    },
+    {
+      "edition": 0,
+      "paper": 4,
+      "sha": "aaefeaabdc1b4abd568c22e397f82e3d2496620d",
+      "seconds": 289
+    },
+    {
+      "edition": 0,
+      "paper": 5,
+      "sha": "fea0da72756ff1604c156285ac31e392d7e3ca62",
+      "seconds": 344
+    },
+    {
+      "edition": 0,
+      "paper": 6,
+      "sha": "3c69b5b36be4c96692210862db1896364743ae0a",
+      "seconds": 258
+    },
+    {
+      "edition": 0,
+      "paper": 7,
+      "sha": "1ccba371f1288a4aa6fdd1b23d32a0db58acbff7",
+      "seconds": 241
+    },
+    {
+      "edition": 0,
+      "paper": 8,
+      "sha": "cbf6b530ed24b0df83189f99b4ac5c5baa05849b",
+      "seconds": 269
+    },
+    {
+      "edition": 0,
+      "paper": 9,
+      "sha": "ce1b118942bfdef2a1b6d1d4bccfa0a08b431168",
+      "seconds": 235
+    },
+    {
+      "edition": 0,
+      "paper": 10,
+      "sha": "1e018fc4b3fba01f9bbc95627dee86ea974f56a5",
+      "seconds": 260
+    },
+    {
+      "edition": 0,
+      "paper": 11,
+      "sha": "e335dbfba28971a461e699a5e8ff82a67216cff3",
+      "seconds": 374
+    },
+    {
+      "edition": 0,
+      "paper": 12,
+      "sha": "d1af3ea882589d0275f4e0e8631aa0eb2a0ccfb1",
+      "seconds": 245
+    },
+    {
+      "edition": 0,
+      "paper": 13,
+      "sha": "53a1f46c2d137a91167ae2285c9df3c36a331185",
+      "seconds": 291
+    },
+    {
+      "edition": 0,
+      "paper": 14,
+      "sha": "988ef4bacf26d04f3484e2ee26f18d35be044312",
+      "seconds": 267
+    },
+    {
+      "edition": 0,
+      "paper": 15,
+      "sha": "44a0dd19dcfac33b8179b2c1694082402027271d",
+      "seconds": 270
+    },
+    {
+      "edition": 0,
+      "paper": 16,
+      "sha": "3bcd6d8fef12aed23a63a8a8f43f98e66a10f4f5",
+      "seconds": 326
+    },
+    {
+      "edition": 0,
+      "paper": 17,
+      "sha": "e0b1a71c978947400bd8f040a986b1ea01853878",
+      "seconds": 291
+    },
+    {
+      "edition": 0,
+      "paper": 18,
+      "sha": "07c9beca109f0c67d8b73cadfd7ce7796c32a26e",
+      "seconds": 288
+    },
+    {
+      "edition": 0,
+      "paper": 19,
+      "sha": "b0b05eebb1d33afd5e456570f12959a50057f0d8",
+      "seconds": 281
+    },
+    {
+      "edition": 0,
+      "paper": 20,
+      "sha": "e85e17fa58901b193970508742908af84db893a3",
+      "seconds": 320
+    },
+    {
+      "edition": 0,
+      "paper": 21,
+      "sha": "e48294c3fbf6f95f86e5cffb60b7c2c1927793fd",
+      "seconds": 296
+    },
+    {
+      "edition": 0,
+      "paper": 22,
+      "sha": "71c49f8a3ce5c0fbcc8ace882f9c99fbbcaa1261",
+      "seconds": 255
+    },
+    {
+      "edition": 0,
+      "paper": 23,
+      "sha": "ce104a8d11e5c2bf47bdaba46c152a019915a155",
+      "seconds": 258
+    },
+    {
+      "edition": 0,
+      "paper": 24,
+      "sha": "c70e41ab4d013e23d29e37eb556d406e43974f63",
+      "seconds": 282
+    }
+  ],
+  "finalReview": {
+    "status": "complete",
+    "publicationCommit": "8075b76ae32555dd4aa64ea07b98177ce09e296f",
+    "verifiedAtUtc": "2026-10-09T20:22:42.678446+00:00",
+    "questions": 1933,
+    "collections": 196,
+    "publicTopicPdfsVerified": 18,
+    "coreFilesVerified": 6,
+    "changedSourceImagesVerified": 484,
+    "sourceAndNumberingReviewComplete": true
+  }
+}
