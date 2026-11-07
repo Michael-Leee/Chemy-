@@ -14,7 +14,7 @@ const MIRRORS = [
 ];
 // 若页面脚本已在 self.mirrorBaseList 预置了镜像列表则优先采用（可选高级配置，默认用上面的 MIRRORS）
 let mirrorBaseList = (typeof self !== 'undefined' && self.mirrorBaseList) || MIRRORS;
-const MIRROR_TIMEOUT_MS = 30000; // 单个源最长等待时间，超时即换下一个源
+const MIRROR_TIMEOUT_MS = 8000; // 单个源最长等待时间，超时即换下一个源
 async function fetchWithTimeout(url, timeoutMs) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
