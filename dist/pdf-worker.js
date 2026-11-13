@@ -61,6 +61,18 @@ async function getBook(slug, version,kind='questions') {
   cachedBook = {slug,kind,version,doc};
   return doc;
 }
+// 第40届：原卷本身是标准 A4 矢量页，直接按题目页码范围复制，
+// 不重绘、不 OCR，也无需专题打印册 / export-index。
+let cachedPageBook;
+async function getPageBook(kind) {
+  if (cachedPageBook?.kind === kind) return cachedPageBook.doc;
+  self.postMessage({status:'正在读取第40届原卷，首次下载可能需要稍候…'});
+  const response = await fetchMirror(`downloads/chemy40-${kind}.pdf?v=edition40-v1`);
+  if (!response.ok) throw new Error('第40届原卷暂时无法读取，请检查网络后重试。');
+  const doc = await PDFDocument.load(await response.arrayBuffer());
+  cachedPageBook = {kind,doc};
+  return doc;
+}
 self.onmessage = async ({data}) => {
   try {
     const kind = data.kind === 'answers' ? 'answers' : 'questions';
@@ -98,6 +110,20 @@ self.onmessage = async ({data}) => {
     for (const [index,note] of (data.paperIntro || []).entries()) await drawNote(note,`paper-intro-${index}`);
     for (let i=0; i<data.items.length; i++) {
       const item = data.items[i];
+      if (item.book === 'chemy40') {
+        const range = kind === 'answers' ? item.answerPages : item.questionPages;
+        if (!Array.isArray(range) || range.length !== 2) throw new Error('这道题的原卷页码缺失，请刷新后重试。');
+        const book = await getPageBook(kind);
+        const lo = Math.max(0, range[0]-1), hi = Math.min(book.getPageCount()-1, range[1]-1);
+        const ids = [];
+        for (let p = lo; p <= hi; p++) ids.push(p);
+        if (!ids.length) throw new Error('这道题的原卷页码无效，请刷新后重试。');
+        const copied = await out.copyPages(book, ids);
+        for (const sheet of copied) { out.addPage(sheet); pageCount++; }
+        page = null; // 后续旧题必须另起新页，不能续在复制的原卷页上
+        self.postMessage({status:`正在排版第 ${i+1} / ${data.items.length} 道题…`});
+        continue;
+      }
       const index = await getIndex(item.slug,data.version,kind);
       const regions = index[item.id];
       if (!regions?.length) throw new Error('这道题的下载索引缺失，请稍后重试。');
