@@ -326,7 +326,9 @@ function render() {
   $('topic-title').textContent = activeTopic;
   const range = selectedPaper !== 'all' ? paperLabel(selectedPaper) : selectedEdition !== 'all' ? editionLabel(selectedEdition) : `${new Set(list.map(paperKey)).size} 份试卷`;
   $('topic-summary').textContent = `${list.length} 道完整大题 · ${range}`;
-  $('downloads').innerHTML = all.length && all.every(q => q.pdfReady) ? `<a class="download" href="downloads/${slugByTopic[activeTopic]}-questions.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部 ${all.length} 道题，包含所有试卷">专题题目 PDF</a><a class="download" href="downloads/${slugByTopic[activeTopic]}-answers.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部参考答案，包含所有试卷">专题答案 PDF</a>` : '';
+  $('downloads').innerHTML = selectedEdition === '40'
+    ? `<a class="download" href="downloads/chemy40-questions.pdf?v=edition40-v1" download title="下载第40届题目合集原卷（22 套，全部专题）">第40届题目合集 PDF</a><a class="download" href="downloads/chemy40-answers.pdf?v=edition40-v1" download title="下载第40届参考答案合集原卷（22 套，全部专题）">第40届答案合集 PDF</a>`
+    : (all.length && all.every(q => q.pdfReady) ? `<a class="download" href="downloads/${slugByTopic[activeTopic]}-questions.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部 ${all.length} 道题，包含所有试卷">专题题目 PDF</a><a class="download" href="downloads/${slugByTopic[activeTopic]}-answers.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部参考答案，包含所有试卷">专题答案 PDF</a>` : '');
   $('questions').innerHTML = list.map(renderQuestion).join('') || '<section class="empty"><h2>当前筛选下没有题目</h2><p>请在目录中选择其他届次或全部试卷。</p></section>';
   $('questions').setAttribute('aria-busy','false');
   window.ChemyAccount?.refreshButtons();
