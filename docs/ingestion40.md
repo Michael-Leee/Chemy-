@@ -18,7 +18,11 @@
 - `dist/questions.json`：新增 200 条，id 为 `chemy40-<套号>-<原题号>`，`edition: 40`。
   沿用原有 `questionPages` / `answerPages` 显示字符串；另加 `questionPageRange` /
   `answerPageRange` 数值页范围、`book: "chemy40"`。
-- `dist/presentation.json`：新增 200 条，正文与答案由原卷文字层生成，按小问编号分段。
+- `dist/presentation.json`：新增 200 条，正文与答案由原卷文字层生成，按小问编号分段；
+  末尾追加 `<section class="e40-figures">`，引用按题裁切渲染的原卷图示。
+- `dist/assets/e40/*.webp`：按题目标题坐标裁切渲染的原卷题目 / 答案区域图（约 1.7× 分辨率、
+  WebP q76）。化学结构式是矢量线条与大量小位图标签混排，无法作为独立图片抠出，
+  因此直接渲染原卷区域是唯一不丢图的做法。
 - `dist/numbering.json`：新题接在各专题现有最大编号之后连续编号（共 2133 条）。
 - `dist/papers.json`：新增 `40-1` ～ `40-22` 卷首信息。
 - `data/import_plan40.json`：22 套的主专题分类计划，供日后走完整流水线复用。
@@ -34,7 +38,9 @@ Worker 直接从原卷册 `copyPages()` 复制对应 A4 矢量页到输出 PDF�
 ## 已知差异（相对前 39 届）
 
 1. 网页正文是原卷文字层转成的 HTML，化学式上下标未逐字还原；结构式、表格、
-   反应式图形以原卷页为准，出处行给出「题目合集第 X 页 · 答案合集第 Y 页」可对照。
+   反应式图形由正文末尾的「原卷图示」按题裁切渲染后完整呈现（点击可看大图），
+   出处行给出「题目合集第 X 页 · 答案合集第 Y 页」可对照。文字层便于检索与复制，
+   原卷图保证图形不丢失，两者互为补充。
 2. 按页复制会带上原卷页眉与相邻题边界处的少量内容（题目常跨页或同页相邻）。
 3. 专题题目册 / 答案册（18 份）不含第40届题目；第40届请通过「下载选题 PDF」或
    `dist/downloads/chemy40-*.pdf` 获取。
@@ -45,4 +51,6 @@ Worker 直接从原卷册 `copyPages()` 复制对应 A4 矢量页到输出 PDF�
 
 第40届的数据、资源与两处前端分支彼此独立。回退时恢复 `dist/questions.json`、
 `presentation.json`、`numbering.json`、`papers.json`、`app.js`、`pdf-worker.js`，
-并删除 `dist/downloads/chemy40-*.pdf` 即可，不影响原有 1933 题。
+并删除 `dist/downloads/chemy40-*.pdf` 与 `dist/assets/e40/` 即可，不影响原有 1933 题。
+若只想撤掉网页图示、保留题目数据，用 `presentation.bak.json` / `questions.bak.json`
+恢复两份 JSON 即可（图示只是追加在正文末尾的 `<section class="e40-figures">`）。
