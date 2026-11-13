@@ -611,7 +611,7 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 
 async function loadLibrary() {
   try {
-    const [data,numbering,display] = await Promise.all(['questions.json?v=e40-figures-v1','numbering.json?v=paper-type-v1','presentation.json?v=e40-figures-v1'].map(async path => {
+    const [data,numbering,display] = await Promise.all(['questions.json?v=e40-inline-v1','numbering.json?v=paper-type-v1','presentation.json?v=e40-inline-v1'].map(async path => {
       const response = await (window.ChemyMirror ? ChemyMirror.fetch(path) : fetch(path)); if (!response.ok) throw new Error('题库加载失败'); return response.json();
     }));
     questions = data; presentation = display; numbers = numbering.numberById; pdfVersion = numbering.pdfVersion || numbering.version || pdfVersion; numberingVersion = numbering.version;
