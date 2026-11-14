@@ -129,7 +129,7 @@ function startExport(kind='questions') {
   const snapshot=exportItems.slice(),label=answers?'答案':'题目';
   exportBusy = true; $('export-start').disabled = true; $('export-answers').disabled = true;
   $('export-status').textContent = `正在准备${label}…`;
-  try { exportWorker = new Worker('pdf-worker.js?v=selected-answers-v1'); }
+  try { exportWorker = new Worker('pdf-worker.js?v=source-export-v3'); }
   catch (_) { exportFailed('PDF 工具暂时无法启动，请刷新页面后重试。',button,label); return; }
   exportWorker.onerror = () => exportFailed('PDF 工具加载失败，请检查网络后重试。',button,label);
   exportWorker.onmessage = ({data}) => {
@@ -146,7 +146,7 @@ function startExport(kind='questions') {
       cancelExport(); $(button).textContent = `再次下载${label} PDF`;
     }
   };
-  exportWorker.postMessage({kind:answers?'answers':'questions',items:snapshot.map(q => ({id:q.id,slug:slugByTopic[q.topic],book:q.book,questionPages:q.questionPageRange,answerPages:q.answerPageRange})),version:pdfVersion,title:`Chemy · ${label} · ${snapshot.map(q => `${q.topic}第${numbers[q.id]}题`).join('、')}`});
+  exportWorker.postMessage({kind:answers?'answers':'questions',items:snapshot.map(q => ({id:q.id})),version:'source-cuts-v1',title:`Chemy · ${label} · ${snapshot.map(q => `${q.topic}第${numbers[q.id]}题`).join('、')}`});
 }
 function exportFailed(message,button='export-start',label='题目') {
   cancelExport(); $('export-status').textContent = message; $(button).textContent = `重试下载${label} PDF`;
