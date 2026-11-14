@@ -4,6 +4,7 @@
 .chem-math:not(.chem-math--display){white-space:nowrap}
 .chem-math .katex{font-size:1.03em}
 .chem-math.katex-error, .chem-math--display.katex-error{color:#b91c1c}
+.chem-math-fallback{font-style:italic;color:#52606d}
 
 .chem-table{width:100%;overflow-x:auto;margin:14px 0;-webkit-overflow-scrolling:touch}
 .chem-table table{border-collapse:collapse;min-width:100%;font-size:.9em;font-variant-numeric:tabular-nums}

@@ -8,16 +8,33 @@
       el.setAttribute('data-math-done', '1');
       var tex = el.getAttribute('data-tex') || el.textContent || '';
       var display = el.classList.contains('chem-math--display');
+      var opts = {
+        displayMode: display,
+        throwOnError: true,
+        strict: false,
+        trust: false,
+        output: 'htmlAndMathml'
+      };
+      function readable(t) {
+        return t.replace(/\\[a-zA-Z]+\s*\{([^{}]*)\}/g, '$1')
+                .replace(/\\[a-zA-Z]+/g, ' ')
+                .replace(/[{}^_$]/g, '')
+                .replace(/\s+/g, ' ').trim();
+      }
       try {
-        window.katex.render(tex, el, {
-          displayMode: display,
-          throwOnError: false,
-          strict: false,
-          trust: false,
-          output: 'htmlAndMathml'
-        });
+        window.katex.render(tex, el, opts);
       } catch (e) {
-        el.removeAttribute('data-math-done');
+        // MinerU occasionally emits unbalanced braces / \tag in inline math.
+        // A second chance with the offending commands removed, then a plain
+        // text fallback -- never a red KaTeX error box.
+        var cleaned = tex.replace(/\\tag\s*\{[^{}]*\}/g, '')
+                         .replace(/\\left|\\right/g, '');
+        try {
+          window.katex.render(cleaned, el, opts);
+        } catch (e2) {
+          el.classList.add('chem-math-fallback');
+          el.textContent = readable(tex) || tex;
+        }
       }
     });
   }
