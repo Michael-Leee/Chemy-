@@ -1,0 +1,24 @@
+/* Styles for MinerU-generated content: KaTeX equations, real tables, figures. */
+.chem-math--display{margin:14px 0;padding:2px 0;overflow-x:auto;overflow-y:hidden;text-align:center}
+.chem-math--display .katex-display{margin:.4em 0}
+.chem-math:not(.chem-math--display){white-space:nowrap}
+.chem-math .katex{font-size:1.03em}
+.chem-math.katex-error, .chem-math--display.katex-error{color:#b91c1c}
+
+.chem-table{width:100%;overflow-x:auto;margin:14px 0;-webkit-overflow-scrolling:touch}
+.chem-table table{border-collapse:collapse;min-width:100%;font-size:.9em;font-variant-numeric:tabular-nums}
+.chem-table td,.chem-table th{border:1px solid rgba(127,140,160,.42);padding:5px 9px;text-align:center;line-height:1.5}
+.chem-table th{font-weight:600}
+.chem-table img{max-width:100%;height:auto}
+
+.q-body h4,.answer-content h4{font-size:1.02em;font-weight:700;margin:16px 0 8px}
+.q-body p,.answer-content p{margin:0 0 12px;line-height:1.9}
+.q-body .source-figure,.answer-content .source-figure{margin:14px 0}
+.q-body .source-figure img,.answer-content .source-figure img{width:var(--figure-width);max-width:100%;height:auto}
+
+/* MinerU stores worked answers as algorithm/code blocks; keep them readable
+   and let inline KaTeX flow inside the sentence. */
+.chem-code{margin:0 0 12px;line-height:1.9;white-space:normal}
+.chem-caption{font-size:.88em;color:var(--muted);text-align:center;margin:0 0 14px;line-height:1.6}
+.chem-math--display .katex-display>.katex{white-space:normal}
+.q-body sup,.answer-content sup,.q-body sub,.answer-content sub{font-size:.72em}
