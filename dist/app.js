@@ -146,7 +146,7 @@ function startExport(kind='questions') {
       cancelExport(); $(button).textContent = `再次下载${label} PDF`;
     }
   };
-  exportWorker.postMessage({kind:answers?'answers':'questions',items:snapshot.map(q => ({id:q.id})),version:'source-cuts-v1',title:`Chemy · ${label} · ${snapshot.map(q => `${q.topic}第${numbers[q.id]}题`).join('、')}`});
+  exportWorker.postMessage({kind:answers?'answers':'questions',items:snapshot.map(q => ({id:q.id})),version:'source-cuts-v2',title:`Chemy · ${label} · ${snapshot.map(q => `${q.topic}第${numbers[q.id]}题`).join('、')}`});
 }
 function exportFailed(message,button='export-start',label='题目') {
   cancelExport(); $('export-status').textContent = message; $(button).textContent = `重试下载${label} PDF`;
