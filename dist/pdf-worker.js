@@ -1,13 +1,18 @@
-/* Chemy export worker v3 — clip the selected questions DIRECTLY from the
-   original papers.
+/* Chemy export worker v4 — clip selected questions from the original papers
+   as a CONTINUOUS, cross-page stream.
 
-   Old chain:  original PDF -> reflowed topic book -> export-index bands
-               -> pdf-lib clip -> output
-   New chain:  original PDF -> source-cuts.json bands -> pdf-lib clip -> output
+   v3 placed one band per output page (scaling tall bands down to fit) and
+   inserted fixed gaps after every band/question, which orphaned paper titles
+   and left large blank areas at the foot of each page.  v4 instead:
 
-   One less conversion, full original vector fidelity, and the same index also
-   drives the rebuilt web display. Mirror racing is preserved from v2 (a
-   full-body race, not a headers-only race, because github.io has fast TTFB). */
+     * uses ONE uniform scale (fit content width) so spacing matches the source,
+     * flows bands back-to-back with NO artificial gaps,
+     * splits a band only at a safe cut line (a text-line / figure edge) when it
+       runs past the bottom margin — "cut at the line nearest the bottom",
+     * lets content cross output-page boundaries naturally.
+
+   Mirror racing is preserved from v3 (a full-body race, not a headers-only
+   race, because github.io has fast TTFB). */
 importScripts('vendor/pdf-lib.min.js');
 const {PDFDocument, PageSizes, StandardFonts, rgb} = PDFLib;
 
@@ -87,7 +92,7 @@ self.onmessage = async ({data}) => {
     out.setTitle(data.title); out.setAuthor('Chemy 化学奥林匹克团队');
     out.setCreator('Chemy 专题题库 · 原卷直裁'); out.setLanguage('zh-CN');
     const [W, H] = PageSizes.A4;
-    const margin = 48, bottom = 55;
+    const margin = 48, bottomMargin = 55;
     const font = await out.embedFont(StandardFonts.TimesRoman);
     const copiedCache = new Map();
     let page = null, cursor = 0, pageCount = 0;
@@ -111,6 +116,53 @@ self.onmessage = async ({data}) => {
       return copiedCache.get(ck);
     }
 
+    // Draw one horizontal slice [top, bottom] (source coords measured from the
+    // TOP of the page) of a source page at the current output cursor.
+    async function drawSlice(src, top, bottom, scale) {
+      const sh = src.getHeight(), sw = src.getWidth();
+      const clipTop = Math.min(sh, sh - top);
+      const clipBottom = Math.max(0, sh - bottom);
+      const nh = clipTop - clipBottom;
+      if (nh < 2) return 0;
+      const embedded = await out.embedPage(src, {
+        left: 0, right: sw, top: clipTop, bottom: clipBottom});
+      const dh = nh * scale, dw = sw * scale;
+      page.drawPage(embedded, {x: (W - dw) / 2, y: cursor - dh,
+        xScale: scale, yScale: scale});
+      placements.push({sourceTop: top, sourceBottom: bottom, scale, page: pageCount,
+        top: H - cursor, height: dh});
+      cursor -= dh;
+      return dh;
+    }
+
+    // Flow a source band [top, bottom] onto the output, splitting at safe cut
+    // lines so each page fills down to the bottom margin.
+    async function flowBand(book, pageIdx, top, bottom) {
+      const src = await copiedPage(book, pageIdx);
+      const scale = Math.min(1, (W - 2 * margin) / src.getWidth());
+      const lines = (cutsData.cutlines && cutsData.cutlines[book] &&
+                     cutsData.cutlines[book][String(pageIdx)]) || [];
+      let cur = top;
+      while (bottom - cur > 1) {
+        const fitSrc = (cursor - bottomMargin) / scale;
+        if (bottom - cur <= fitSrc + 0.5) {
+          await drawSlice(src, cur, bottom, scale);
+          break;
+        }
+        // Largest safe cut line that still fits above the bottom margin.
+        let split = null;
+        for (const y of lines) {
+          if (y <= cur + 0.5) continue;
+          if (y >= bottom - 0.5) break;
+          if (y - cur > fitSrc + 0.5) break;
+          split = y;
+        }
+        if (split == null) { newPage(); continue; }
+        await drawSlice(src, cur, split, scale);
+        cur = split;
+      }
+    }
+
     newPage();
     for (let i = 0; i < data.items.length; i++) {
       const item = data.items[i];
@@ -123,27 +175,8 @@ self.onmessage = async ({data}) => {
       const book = m && cuts.books[m[1]] && cuts.books[m[1]][key];
       if (!book) throw new Error('这道题的原卷未登记：' + item.id);
       for (const b of bands) {
-        const src = await copiedPage(book, b.page);
-        const sh = src.getHeight(), sw = src.getWidth();
-        // source-cuts stores y from the TOP; pdf-lib clips with a bottom-left origin.
-        const clipTop = Math.min(sh, sh - b.top);
-        const clipBottom = Math.max(0, sh - b.bottom);
-        if (clipTop - clipBottom < 4) continue;
-        const embedded = await out.embedPage(src, {
-          left: 0, right: sw, top: clipTop, bottom: clipBottom});
-        const naturalH = clipTop - clipBottom, naturalW = sw;
-        if (!page || cursor - bottom < Math.min(naturalH, H - margin - bottom)) newPage();
-        const cap = cursor - bottom;
-        const scale = Math.min(1, cap / naturalH, (W - 2 * margin) / naturalW);
-        const dh = naturalH * scale, dw = naturalW * scale;
-        page.drawPage(embedded, {x: (W - dw) / 2, y: cursor - dh,
-          xScale: scale, yScale: scale});
-        placements.push({id: item.id, sourcePage: b.page, sourceTop: b.top,
-          sourceBottom: b.bottom, scale, page: pageCount, top: H - cursor,
-          height: dh});
-        cursor -= dh + 6;
+        await flowBand(book, b.page, b.top, b.bottom);
       }
-      cursor -= 12;
       self.postMessage({status: `正在排版第 ${i + 1} / ${data.items.length} 道题…`});
     }
     const bytes = await out.save();
