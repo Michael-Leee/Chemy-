@@ -7,7 +7,7 @@ const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const editionOf = q => q.edition ?? 39;
 const paperKey = q => editionOf(q) === 39 ? String(q.paper) : `${editionOf(q)}-${q.paper}`;
-const editionLabel = e => String(e) === '0' ? '化学联赛' : `第${e}届`;
+const editionLabel = e => String(e) === '0' ? '化学联赛' : String(e) === '41' ? '化英社40届' : `第${e}届`;
 const chevron = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 let questions = [], presentation = {}, numbers = {}, pdfVersion = 'topic-numbering-v1', numberingVersion = '';
 let byId = new Map(), byTopic = new Map(), paperLabels = new Map();
@@ -617,7 +617,7 @@ async function loadLibrary() {
     questions = data; presentation = display; numbers = numbering.numberById; pdfVersion = numbering.pdfVersion || numbering.version || pdfVersion; numberingVersion = numbering.version;
     if (questions.some(q => !Number.isInteger(numbers[q.id]) || !presentation[q.id]?.body || !presentation[q.id]?.answer)) throw new Error('编号与题库不一致');
     byId = new Map(questions.map(q => [q.id,q])); byTopic = new Map(topics.map(t => [t,questions.filter(q => q.topic === t)]));
-    for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `第${editionOf(q)}届 · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
+    for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `${editionOf(q) === 41 ? '化英社40届' : '第'+editionOf(q)+'届'} · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
     $('library-status').textContent = `${questions.length} 道题 · ${new Set(questions.map(paperKey)).size} 份试卷`;
     $('search-topic').innerHTML = option('all','全部专题','all')+topics.map(t => option(t,t,'all')).join('');
     $('search-edition').innerHTML = option('all','全部届次','all')+editionValues(questions).map(e => option(e,editionLabel(e),'all')).join('');
