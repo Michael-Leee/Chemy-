@@ -7,7 +7,7 @@ const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const editionOf = q => q.edition ?? 39;
 const paperKey = q => editionOf(q) === 39 ? String(q.paper) : `${editionOf(q)}-${q.paper}`;
-const editionLabel = e => String(e) === '0' ? 'Chemy 联赛' : `第${e}届`;
+const editionLabel = e => String(e) === '0' ? '化学联赛' : `第${e}届`;
 const chevron = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 let questions = [], presentation = {}, numbers = {}, pdfVersion = 'topic-numbering-v1', numberingVersion = '';
 let byId = new Map(), byTopic = new Map(), paperLabels = new Map();
@@ -139,14 +139,14 @@ function startExport(kind='questions') {
       const blob = new Blob([data.bytes],{type:'application/pdf'});
       const url = URL.createObjectURL(blob), link = document.createElement('a');
       const single = snapshot.length === 1 ? `${snapshot[0].topic}-第${numbers[snapshot[0].id]}题` : `选题-${snapshot.length}题`;
-      link.href = url; link.download = `Chemy-${single}-${label}.pdf`; document.body.append(link); link.click(); link.remove();
+      link.href = url; link.download = `${single}-${label}.pdf`; document.body.append(link); link.click(); link.remove();
       setTimeout(() => URL.revokeObjectURL(url),60000);
       $('export-status').textContent = 'PDF 已生成，下载已开始。';
       window.ChemyAccount?.savePaper(snapshot.map(q=>q.id),'自选练习卷',false,fromPaper);
       cancelExport(); $(button).textContent = `再次下载${label} PDF`;
     }
   };
-  exportWorker.postMessage({kind:answers?'answers':'questions',items:snapshot.map(q => ({id:q.id})),version:'source-cuts-v3',title:`Chemy · ${label} · ${snapshot.map(q => `${q.topic}第${numbers[q.id]}题`).join('、')}`});
+  exportWorker.postMessage({kind:answers?'answers':'questions',items:snapshot.map(q => ({id:q.id})),version:'source-cuts-v3',title:`${label} · ${snapshot.map(q => `${q.topic}第${numbers[q.id]}题`).join('、')}`});
 }
 function exportFailed(message,button='export-start',label='题目') {
   cancelExport(); $('export-status').textContent = message; $(button).textContent = `重试下载${label} PDF`;
@@ -315,14 +315,14 @@ function render() {
   else $('about-link').removeAttribute('aria-current');
   $('categories').innerHTML = topics.map(t => `<button class="category" data-topic="${escapeHtml(t)}"${!showingIntroduction && !showingFavorites && t === activeTopic ? ' aria-current="page"' : ''}><span class="category-name">${t}</span><span class="count">${byTopic.get(t).length}</span></button>`).join('');
   if (showingIntroduction) {
-    observer?.disconnect(); document.title = 'Chemy 化学竞赛专题题库';
+    observer?.disconnect(); document.title = '化学竞赛专题题库';
     $('questions').setAttribute('aria-busy','false');
     return;
   }
   if(showingFavorites){observer?.disconnect();window.ChemyAccount?.renderFavorites();return;}
   renderFilters();
   const all = byTopic.get(activeTopic) || [], list = currentList();
-  document.title = `${activeTopic} · Chemy 化学竞赛专题题库`;
+  document.title = `${activeTopic} · 化学竞赛专题题库`;
   $('topic-title').textContent = activeTopic;
   const range = selectedPaper !== 'all' ? paperLabel(selectedPaper) : selectedEdition !== 'all' ? editionLabel(selectedEdition) : `${new Set(list.map(paperKey)).size} 份试卷`;
   $('topic-summary').textContent = `${list.length} 道完整大题 · ${range}`;
@@ -617,7 +617,7 @@ async function loadLibrary() {
     questions = data; presentation = display; numbers = numbering.numberById; pdfVersion = numbering.pdfVersion || numbering.version || pdfVersion; numberingVersion = numbering.version;
     if (questions.some(q => !Number.isInteger(numbers[q.id]) || !presentation[q.id]?.body || !presentation[q.id]?.answer)) throw new Error('编号与题库不一致');
     byId = new Map(questions.map(q => [q.id,q])); byTopic = new Map(topics.map(t => [t,questions.filter(q => q.topic === t)]));
-    for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届 Chemy 联赛` : `第${editionOf(q)}届 · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
+    for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `第${editionOf(q)}届 · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
     $('library-status').textContent = `${questions.length} 道题 · ${new Set(questions.map(paperKey)).size} 份试卷`;
     $('search-topic').innerHTML = option('all','全部专题','all')+topics.map(t => option(t,t,'all')).join('');
     $('search-edition').innerHTML = option('all','全部届次','all')+editionValues(questions).map(e => option(e,editionLabel(e),'all')).join('');
