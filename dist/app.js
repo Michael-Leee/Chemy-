@@ -612,7 +612,12 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 async function loadLibrary() {
   try {
     const [data,numbering,display] = await Promise.all(['questions.json?v=mineru-all-v6','numbering.json?v=mineru-all-v6','presentation.json?v=mineru-all-v6'].map(async path => {
-      const response = await (window.ChemyMirror ? ChemyMirror.fetch(path) : fetch(path)); if (!response.ok) throw new Error('题库加载失败'); return response.json();
+      // Big JSONs (questions/presentation ~40MB) must load from the same origin: the racing mirror often returns a truncated stream and response.json() then throws -> whole site shows '无法加载'.
+      let response;
+      try { response = await fetch(path); }
+      catch (e) { response = await (window.ChemyMirror ? ChemyMirror.fetch(path) : fetch(path)); }
+      if (!response.ok) throw new Error('题库加载失败');
+      return response.json();
     }));
     questions = data; presentation = display; numbers = numbering.numberById; pdfVersion = numbering.pdfVersion || numbering.version || pdfVersion; numberingVersion = numbering.version;
     if (questions.some(q => !Number.isInteger(numbers[q.id]) || !presentation[q.id]?.body || !presentation[q.id]?.answer)) throw new Error('编号与题库不一致');
