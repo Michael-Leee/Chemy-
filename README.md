@@ -1,9 +1,8 @@
 # Chemy 化学竞赛专题题库
 
-公开网站：https://brucejllpku.github.io/Chemy-/
+公开网站：https://Michael-Leee.github.io/Chemy-/
 
-GitHub 仓库：https://github.com/BruceJLLpku/Chemy-
-
+GitHub 仓库：https://github.com/Michael-Leee/Chemy-
 `main` 分支更新后，GitHub Actions 自动发布 `dist` 目录到 GitHub Pages。网页、题目数据、原图、专题 PDF、整理脚本均在同一仓库保存；临时预览文件与登录凭据不上传。
 
 九个专题：有机化学、高分子化学、晶体化学、无机综合与结构推断、方程式与元素化学、热力学与化学平衡、电化学、动力学、分析化学。
