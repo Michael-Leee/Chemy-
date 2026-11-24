@@ -611,7 +611,7 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 
 async function loadLibrary() {
   try {
-    const [data,numbering,display] = await Promise.all(['questions.json?v=mineru-all-v6','numbering.json?v=mineru-all-v6','presentation.json?v=mineru-all-v6'].map(async path => {
+    const [data,numbering,display] = await Promise.all(['questions.json?v=mineru-all-v7','numbering.json?v=mineru-all-v7','presentation.json?v=mineru-all-v7'].map(async path => {
       // Big JSONs (questions/presentation ~40MB) must load from the same origin: the racing mirror often returns a truncated stream and response.json() then throws -> whole site shows '无法加载'.
       let response;
       try { response = await fetch(path); }
