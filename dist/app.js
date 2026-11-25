@@ -3,14 +3,15 @@
 const topics = ['有机化学','高分子化学','晶体化学','无机综合与结构推断','方程式与元素化学','热力学与化学平衡','电化学','动力学','分析化学'];
 const slugs = ['organic','polymer','crystal','inference','elements','equilibrium','electrochemistry','kinetics','analysis'];
 const slugByTopic = Object.fromEntries(topics.map((t,i) => [t,slugs[i]]));
-const PDF_BASE = 'https://raw.githubusercontent.com/Michael-Leee/OlympiadChem-Drill/main/dist/downloads/';  // PDFs served from raw: excluded from Pages artifact (size limit)
+const PDF_BASE = 'https://raw.githubusercontent.com/Michael-Leee/OlympiadChem-Drill/main/dist/downloads/';
+const ASSET_VER = 'mineru-all-v10';  // PDFs served from raw: excluded from Pages artifact (size limit)
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const editionOf = q => q.edition ?? 39;
 const paperKey = q => editionOf(q) === 39 ? String(q.paper) : `${editionOf(q)}-${q.paper}`;
 const editionLabel = e => String(e) === '0' ? '化学联赛' : String(e) === '41' ? '化英社40届' : `第${e}届`;
 const chevron = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
-let questions = [], presentation = {}, numbers = {}, pdfVersion = 'topic-numbering-v1', numberingVersion = '';
+let questions = [], presentation = {}, numbers = {}, summaries = {}, loadedTopics = new Set(), topicIndex = {}, pdfVersion = 'topic-numbering-v1', numberingVersion = '';
 let byId = new Map(), byTopic = new Map(), paperLabels = new Map();
 let activeTopic = topics[0], selectedEdition = 'all', selectedPaper = 'all', activeQuestion = '';
 let ready = false, observer, lastUrl = '', scrollLockUntil = 0;
@@ -194,7 +195,7 @@ $('export-dialog').addEventListener('cancel',cancelExport);
 function questionTitle(q, bodyText) {
   if (q.title) return q.id === 'chemy32-12-22' ? q.title.replace('5-4', `${numbers[q.id]}-4`) : q.title;
   if (!summaryById.has(q.id)) {
-    const text = bodyText ?? htmlText(presentation[q.id].body);
+    const text = bodyText ?? summaries[q.id] ?? (presentation[q.id] ? htmlText(presentation[q.id].body) : q.title || q.id);
     summaryById.set(q.id,`题干：${text.slice(0,42)}${text.length > 42 ? '…' : ''}`);
   }
   return summaryById.get(q.id);
@@ -357,20 +358,23 @@ function scrollToQuestion(id, focus = true) {
     if (focus) article.focus({preventScroll:true});
   });
 }
-function navigateQuestion(id, fromSearch = false) {
+async function navigateQuestion(id, fromSearch = false) {
   const q = byId.get(id);
   if (!q) return;
   const needsRender = !!window.communityView || showingFavorites || showingIntroduction || q.topic !== activeTopic || !$(id);
   window.communityView='';showingFavorites = false; showingIntroduction = false;
-  if (needsRender) { activeTopic = q.topic; selectedEdition = 'all'; selectedPaper = 'all'; activeQuestion = id; render(); }
+  if (needsRender) { activeTopic = q.topic; selectedEdition = 'all'; selectedPaper = 'all'; activeQuestion = id;
+    await ensureTopic(activeTopic); render(); }
   writeUrl(id);
   closePanel(false);
   if (fromSearch) $('return-search').hidden = false;
   scrollToQuestion(id);
 }
-function restoreUrl() {
+async function restoreUrl() {
   if (!ready || lastUrl === location.href) return;
-  readUrl(); const target = activeQuestion; render(); closePanel(false);
+  readUrl(); const target = activeQuestion;
+  if (!showingIntroduction) await ensureTopic(activeTopic);
+  render(); closePanel(false);
   if (target && !showingIntroduction) scrollToQuestion(target,false);
   else requestAnimationFrame(() => window.scrollTo({top:history.state?.scrollY || 0,behavior:'instant'}));
 }
@@ -412,9 +416,24 @@ function htmlText(html) {
   const extra = [...template.content.querySelectorAll('img[alt]')].map(img => img.alt).filter(alt => alt && !/原图|模拟试题.*题目|模拟试题.*答案/.test(alt)).join(' ');
   return normalizeText(template.content.textContent+' '+extra);
 }
+async function fetchJSON(path) {
+  try { const r = await fetch(path); if (!r.ok) throw 0; return r.json(); }
+  catch (e) { const r = await (window.ChemyMirror ? ChemyMirror.fetch(path) : fetch(path)); if (!r.ok) throw new Error('题库加载失败'); return r.json(); }
+}
+async function ensureTopic(topic) {
+  if (loadedTopics.has(topic)) return;
+  const i = topicIndex[topic];
+  if (i === undefined) return;
+  const part = await fetchJSON(`presentation-${i}.json?v=${ASSET_VER}`);
+  Object.assign(presentation, part); loadedTopics.add(topic);
+}
+async function ensureAllPresentation() {
+  await Promise.all(topics.map(t => ensureTopic(t)));
+}
 function prepareSearchIndex() {
   if (indexPromise) return indexPromise;
-  indexPromise = new Promise(resolve => {
+  indexPromise = (async () => { await ensureAllPresentation();
+    return await new Promise(resolve => {
     const items = []; let offset = 0;
     function batch() {
       const end = Math.min(offset+65,questions.length);
@@ -426,7 +445,8 @@ function prepareSearchIndex() {
       else { searchIndex = items; resolve(items); }
     }
     batch();
-  });
+    });
+  })();
   return indexPromise;
 }
 function refreshSearchPapers() {
@@ -518,9 +538,10 @@ function closeSearch() {
   $('search-dialog').close();
 }
 
-function navigateTopic(topic) {
+async function navigateTopic(topic) {
   if (!ready) return;
   closePanel(false);window.communityView=''; showingFavorites = false; showingIntroduction = false; activeTopic = topic; selectedEdition = 'all'; selectedPaper = 'all'; activeQuestion = '';
+  await ensureTopic(topic);
   render(); writeUrl(); window.scrollTo({top:0,behavior:'instant'}); $('reading').focus({preventScroll:true});
 }
 $('categories').addEventListener('click',event => {
@@ -539,10 +560,10 @@ for (const link of [document.querySelector('.site-brand'),$('about-link')]) link
 document.querySelector('.skip').addEventListener('click',event => {
   event.preventDefault(); const target = $(showingIntroduction ? 'introduction' : 'reading'); target.focus(); target.scrollIntoView({block:'start'});
 });
-for (const [id,key] of [['edition-select','edition'],['paper-select','paper']]) $(id).addEventListener('change',event => {
+for (const [id,key] of [['edition-select','edition'],['paper-select','paper']]) $(id).addEventListener('change',async event => {
   if (key === 'edition') { selectedEdition = event.target.value; selectedPaper = 'all'; }
   else selectedPaper = event.target.value;
-  activeQuestion = ''; render(); writeUrl();
+  activeQuestion = ''; await ensureTopic(activeTopic); render(); writeUrl();
   if (openPanelId) panelScrollY = 0;
   else window.scrollTo({top:0,behavior:'instant'});
 });
@@ -612,7 +633,7 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 
 async function loadLibrary() {
   try {
-    const [data,numbering,display] = await Promise.all(['questions.json?v=mineru-all-v9','numbering.json?v=mineru-all-v9','presentation.json?v=mineru-all-v9'].map(async path => {
+    const [data,numbering,summaryData] = await Promise.all(['questions.json?v=mineru-all-v10','numbering.json?v=mineru-all-v10','summaries.json?v=mineru-all-v10'].map(async path => {
       // Big JSONs (questions/presentation ~40MB) must load from the same origin: the racing mirror often returns a truncated stream and response.json() then throws -> whole site shows '无法加载'.
       let response;
       try { response = await fetch(path); }
@@ -620,8 +641,9 @@ async function loadLibrary() {
       if (!response.ok) throw new Error('题库加载失败');
       return response.json();
     }));
-    questions = data; presentation = display; numbers = numbering.numberById; pdfVersion = numbering.pdfVersion || numbering.version || pdfVersion; numberingVersion = numbering.version;
-    if (questions.some(q => !Number.isInteger(numbers[q.id]) || !presentation[q.id]?.body || !presentation[q.id]?.answer)) throw new Error('编号与题库不一致');
+    questions = data; summaries = summaryData; numbers = numbering.numberById; pdfVersion = numbering.pdfVersion || numbering.version || pdfVersion; numberingVersion = numbering.version;
+    if (questions.some(q => !Number.isInteger(numbers[q.id]) || summaries[q.id] === undefined)) throw new Error('编号与题库不一致');
+    topicIndex = Object.fromEntries(topics.map((t,i)=>[t,i]));
     byId = new Map(questions.map(q => [q.id,q])); byTopic = new Map(topics.map(t => [t,questions.filter(q => q.topic === t)]));
     for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `${editionOf(q) === 41 ? '化英社40届' : '第'+editionOf(q)+'届'} · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
     $('library-status').textContent = `${questions.length} 道题 · ${new Set(questions.map(paperKey)).size} 份试卷`;
@@ -629,7 +651,9 @@ async function loadLibrary() {
     $('search-edition').innerHTML = option('all','全部届次','all')+editionValues(questions).map(e => option(e,editionLabel(e),'all')).join('');
     refreshSearchPapers(); ready = true; $('search-launch').disabled = false;
     document.dispatchEvent(new Event('chemy-library-ready'));
-    readUrl(); const target = activeQuestion; render();
+    readUrl(); const target = activeQuestion;
+    if (!showingIntroduction && !showingFavorites && !window.communityView) await ensureTopic(activeTopic);
+    render();
     if (!showingIntroduction) writeUrl(target,false);
     if (target && !showingIntroduction) scrollToQuestion(target,false);
   } catch (error) {
