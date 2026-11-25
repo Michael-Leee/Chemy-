@@ -3,6 +3,7 @@
 const topics = ['有机化学','高分子化学','晶体化学','无机综合与结构推断','方程式与元素化学','热力学与化学平衡','电化学','动力学','分析化学'];
 const slugs = ['organic','polymer','crystal','inference','elements','equilibrium','electrochemistry','kinetics','analysis'];
 const slugByTopic = Object.fromEntries(topics.map((t,i) => [t,slugs[i]]));
+const PDF_BASE = 'https://raw.githubusercontent.com/Michael-Leee/OlympiadChem-Drill/main/dist/downloads/';  // PDFs served from raw: excluded from Pages artifact (size limit)
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const editionOf = q => q.edition ?? 39;
@@ -327,8 +328,8 @@ function render() {
   const range = selectedPaper !== 'all' ? paperLabel(selectedPaper) : selectedEdition !== 'all' ? editionLabel(selectedEdition) : `${new Set(list.map(paperKey)).size} 份试卷`;
   $('topic-summary').textContent = `${list.length} 道完整大题 · ${range}`;
   $('downloads').innerHTML = selectedEdition === '40'
-    ? `<a class="download" href="downloads/chemy40-questions.pdf?v=edition40-v1" download title="下载第40届题目合集原卷（22 套，全部专题）">第40届题目合集 PDF</a><a class="download" href="downloads/chemy40-answers.pdf?v=edition40-v1" download title="下载第40届参考答案合集原卷（22 套，全部专题）">第40届答案合集 PDF</a>`
-    : (all.length && all.every(q => q.pdfReady) ? `<a class="download" href="downloads/${slugByTopic[activeTopic]}-questions.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部 ${all.length} 道题，包含所有试卷">专题题目 PDF</a><a class="download" href="downloads/${slugByTopic[activeTopic]}-answers.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部参考答案，包含所有试卷">专题答案 PDF</a>` : '');
+    ? `<a class="download" href="${PDF_BASE}chemy40-questions.pdf?v=edition40-v1" download title="下载第40届题目合集原卷（22 套，全部专题）">第40届题目合集 PDF</a><a class="download" href="${PDF_BASE}chemy40-answers.pdf?v=edition40-v1" download title="下载第40届参考答案合集原卷（22 套，全部专题）">第40届答案合集 PDF</a>`
+    : (all.length && all.every(q => q.pdfReady) ? `<a class="download" href="${PDF_BASE}${slugByTopic[activeTopic]}-questions.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部 ${all.length} 道题，包含所有试卷">专题题目 PDF</a><a class="download" href="${PDF_BASE}${slugByTopic[activeTopic]}-answers.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部参考答案，包含所有试卷">专题答案 PDF</a>` : '');
   $('questions').innerHTML = list.map(renderQuestion).join('') || '<section class="empty"><h2>当前筛选下没有题目</h2><p>请在目录中选择其他届次或全部试卷。</p></section>';
   $('questions').setAttribute('aria-busy','false');
   window.ChemyAccount?.refreshButtons();
@@ -611,7 +612,7 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 
 async function loadLibrary() {
   try {
-    const [data,numbering,display] = await Promise.all(['questions.json?v=mineru-all-v8','numbering.json?v=mineru-all-v8','presentation.json?v=mineru-all-v8'].map(async path => {
+    const [data,numbering,display] = await Promise.all(['questions.json?v=mineru-all-v9','numbering.json?v=mineru-all-v9','presentation.json?v=mineru-all-v9'].map(async path => {
       // Big JSONs (questions/presentation ~40MB) must load from the same origin: the racing mirror often returns a truncated stream and response.json() then throws -> whole site shows '无法加载'.
       let response;
       try { response = await fetch(path); }
