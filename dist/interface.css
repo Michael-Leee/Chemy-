@@ -34,3 +34,8 @@ button,input,select{font:inherit}button{color:inherit}input,select{min-width:0;c
 @media print{.picker-dialog{display:none!important}}
 /* 阅读区不再叠加浅灰 CHEMY 背景水印，避免与题目图形里的结构式混淆。 */
 .reader-watermark{display:none!important}
+
+/* ChemDrill logo: let it breathe (overrides the old tiny base64 mark) */
+.site-brand{gap:0}
+.site-brand img{width:200px;height:80px;object-fit:contain}
+@media (max-width:760px){.site-brand img{width:150px;height:60px}}
