@@ -37,5 +37,5 @@ button,input,select{font:inherit}button{color:inherit}input,select{min-width:0;c
 
 /* ChemDrill logo: let it breathe (overrides the old tiny base64 mark) */
 .site-brand{gap:0}
-.site-brand img{width:210px;height:84px;object-fit:contain}
-@media (max-width:760px){.site-brand img{width:150px;height:60px}}
+.site-brand img{width:200px;height:61px;object-fit:contain}
+@media (max-width:760px){.site-brand img{width:150px;height:46px}}
