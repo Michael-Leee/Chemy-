@@ -1,5 +1,7 @@
 # 化竞组卷网 · ChemDrill
 
+![ChemDrill 化竞组卷网](dist/assets/logo.webp)
+
 **化学竞赛专题题库 · 按专题组卷 · 专项练习**
 
 在线站点：https://michael-leee.github.io/OlympiadChem-Drill/
