@@ -4,12 +4,12 @@ const topics = ['有机化学','高分子化学','晶体化学','无机综合与
 const slugs = ['organic','polymer','crystal','inference','elements','equilibrium','electrochemistry','kinetics','analysis'];
 const slugByTopic = Object.fromEntries(topics.map((t,i) => [t,slugs[i]]));
 const PDF_BASE = 'https://raw.githubusercontent.com/Michael-Leee/OlympiadChem-Drill/main/dist/downloads/';
-const ASSET_VER = 'mineru-all-v10';  // PDFs served from raw: excluded from Pages artifact (size limit)
+const ASSET_VER = 'mineru-all-v12';  // PDFs served from raw: excluded from Pages artifact (size limit)
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const editionOf = q => q.edition ?? 39;
 const paperKey = q => editionOf(q) === 39 ? String(q.paper) : `${editionOf(q)}-${q.paper}`;
-const editionLabel = e => String(e) === '0' ? '化学联赛' : String(e) === '41' ? '化英社40届' : `第${e}届`;
+const editionLabel = e => String(e) === '0' ? '化学联赛' : String(e) === '41' ? '化英社40届' : `chemy第${e}届`;
 const chevron = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 let questions = [], presentation = {}, numbers = {}, summaries = {}, loadedTopics = new Set(), topicIndex = {}, pdfVersion = 'topic-numbering-v1', numberingVersion = '';
 let byId = new Map(), byTopic = new Map(), paperLabels = new Map();
@@ -329,7 +329,7 @@ function render() {
   const range = selectedPaper !== 'all' ? paperLabel(selectedPaper) : selectedEdition !== 'all' ? editionLabel(selectedEdition) : `${new Set(list.map(paperKey)).size} 份试卷`;
   $('topic-summary').textContent = `${list.length} 道完整大题 · ${range}`;
   $('downloads').innerHTML = selectedEdition === '40'
-    ? `<a class="download" href="${PDF_BASE}chemy40-questions.pdf?v=edition40-v1" download title="下载第40届题目合集原卷（22 套，全部专题）">第40届题目合集 PDF</a><a class="download" href="${PDF_BASE}chemy40-answers.pdf?v=edition40-v1" download title="下载第40届参考答案合集原卷（22 套，全部专题）">第40届答案合集 PDF</a>`
+    ? `<a class="download" href="${PDF_BASE}chemy40-questions.pdf?v=edition40-v1" download title="下载chemy第40届题目合集原卷（22 套，全部专题）">chemy第40届题目合集 PDF</a><a class="download" href="${PDF_BASE}chemy40-answers.pdf?v=edition40-v1" download title="下载第40届参考答案合集原卷（22 套，全部专题）">第40届答案合集 PDF</a>`
     : (all.length && all.every(q => q.pdfReady) ? `<a class="download" href="${PDF_BASE}${slugByTopic[activeTopic]}-questions.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部 ${all.length} 道题，包含所有试卷">专题题目 PDF</a><a class="download" href="${PDF_BASE}${slugByTopic[activeTopic]}-answers.pdf?v=${encodeURIComponent(pdfVersion)}-watermark-v1" download title="下载本专题全部参考答案，包含所有试卷">专题答案 PDF</a>` : '');
   $('questions').innerHTML = list.map(renderQuestion).join('') || '<section class="empty"><h2>当前筛选下没有题目</h2><p>请在目录中选择其他届次或全部试卷。</p></section>';
   $('questions').setAttribute('aria-busy','false');
@@ -633,7 +633,7 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 
 async function loadLibrary() {
   try {
-    const [data,numbering,summaryData] = await Promise.all(['questions.json?v=mineru-all-v10','numbering.json?v=mineru-all-v10','summaries.json?v=mineru-all-v10'].map(async path => {
+    const [data,numbering,summaryData] = await Promise.all(['questions.json?v=mineru-all-v12','numbering.json?v=mineru-all-v12','summaries.json?v=mineru-all-v12'].map(async path => {
       // Big JSONs (questions/presentation ~40MB) must load from the same origin: the racing mirror often returns a truncated stream and response.json() then throws -> whole site shows '无法加载'.
       let response;
       try { response = await fetch(path); }
@@ -645,7 +645,7 @@ async function loadLibrary() {
     if (questions.some(q => !Number.isInteger(numbers[q.id]) || summaries[q.id] === undefined)) throw new Error('编号与题库不一致');
     topicIndex = Object.fromEntries(topics.map((t,i)=>[t,i]));
     byId = new Map(questions.map(q => [q.id,q])); byTopic = new Map(topics.map(t => [t,questions.filter(q => q.topic === t)]));
-    for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `${editionOf(q) === 41 ? '化英社40届' : '第'+editionOf(q)+'届'} · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
+    for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `${editionOf(q) === 41 ? '化英社40届' : 'chemy第'+editionOf(q)+'届'} · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
     $('library-status').textContent = `${questions.length} 道题 · ${new Set(questions.map(paperKey)).size} 份试卷`;
     $('search-topic').innerHTML = option('all','全部专题','all')+topics.map(t => option(t,t,'all')).join('');
     $('search-edition').innerHTML = option('all','全部届次','all')+editionValues(questions).map(e => option(e,editionLabel(e),'all')).join('');
