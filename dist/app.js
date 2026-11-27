@@ -4,12 +4,26 @@ const topics = ['有机化学','高分子化学','晶体化学','无机综合与
 const slugs = ['organic','polymer','crystal','inference','elements','equilibrium','electrochemistry','kinetics','analysis'];
 const slugByTopic = Object.fromEntries(topics.map((t,i) => [t,slugs[i]]));
 const PDF_BASE = 'https://raw.githubusercontent.com/Michael-Leee/OlympiadChem-Drill/main/dist/downloads/';
-const ASSET_VER = 'mineru-all-v12';  // PDFs served from raw: excluded from Pages artifact (size limit)
+const ASSET_VER = 'mineru-all-v13';  // PDFs served from raw: excluded from Pages artifact (size limit)
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const editionOf = q => q.edition ?? 39;
-const paperKey = q => editionOf(q) === 39 ? String(q.paper) : `${editionOf(q)}-${q.paper}`;
-const editionLabel = e => String(e) === '0' ? '化学联赛' : String(e) === '41' ? '化英社40届' : `chemy第${e}届`;
+const realEditionOf = q => q.realEdition ?? q.edition ?? 39;
+const sourceOf = q => q.source || (q.edition === 0 ? 'league' : q.edition === 41 ? 'huaying' : 'chemy');
+const SOURCE_RANK = {guochu:0, chemy:1, huaying:2, league:9};
+const sourceRank = s => SOURCE_RANK[s] ?? 5;
+const editionOf = q => realEditionOf(q);
+const paperKey = q => {
+  const src = sourceOf(q), e = realEditionOf(q);
+  if (src === 'chemy' && e === 39) return String(q.paper);       // 历史特例
+  return `${e}-${src}-${q.paper}`;
+};
+const groupKeyOf = q => `${realEditionOf(q)}-${sourceOf(q)}`;
+const editionLabel = (e, src) => {
+  if (String(e) === '0') return '化学联赛';
+  if (src === 'huaying' || String(e) === '41') return `化英社${e === 41 ? 40 : e}届`;
+  if (src === 'guochu') return `第${e}届国初`;
+  return `chemy第${e}届`;
+};
 const chevron = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 let questions = [], presentation = {}, numbers = {}, summaries = {}, loadedTopics = new Set(), topicIndex = {}, pdfVersion = 'topic-numbering-v1', numberingVersion = '';
 let byId = new Map(), byTopic = new Map(), paperLabels = new Map();
@@ -76,7 +90,7 @@ function renderPicker() {
   const expanded = new Set([...tree.querySelectorAll('details[open]')].map(el => el.dataset.pickBranch));
   const query = normalizeText($('picker-query').value);
   const topic = $('picker-topic').value, edition = $('picker-edition').value;
-  pickerList = questions.filter(q => (topic === 'all' || q.topic === topic) && (edition === 'all' || String(editionOf(q)) === edition)
+  pickerList = questions.filter(q => (topic === 'all' || q.topic === topic) && (edition === 'all' || groupKeyOf(q) === edition)
     && (!$('picker-selected-only').checked || selectedQuestions.has(q.id)) && (!$('picker-favorites-only').checked || window.ChemyAccount?.has(q.id)) && pickerMatches(q,query));
   pickerGroups = new Map();
   $('picker-result-count').textContent = `${$('picker-favorites-only').checked&&!window.ChemyAccount?.isSignedIn()?'请先登录查看收藏 · ':''}${pickerList.length} 题 · ${new Set(pickerList.map(paperKey)).size} 份试卷`;
@@ -86,14 +100,14 @@ function renderPicker() {
     return `<div class="picker-branch"><input type="checkbox" data-pick-group="${key}" aria-label="勾选${escapeHtml(label)}的筛选题目"><details data-pick-branch="${key}"${open || expanded.has(key) ? ' open' : ''}><summary><span>${escapeHtml(label)}</span><span class="picker-group-count"></span></summary>${children}</details></div>`;
   };
   tree.innerHTML = editionValues(pickerList).map((e,editionIndex) => {
-    const editionQs = pickerList.filter(q => editionOf(q) === e);
+    const editionQs = pickerList.filter(q => groupKeyOf(q) === editionKey(e));
     const papers = [...new Set(editionQs.map(paperKey))];
     const children = papers.map((p,paperIndex) => {
       const items = editionQs.filter(q => paperKey(q) === p).sort((a,b) => a.number-b.number);
       const rows = items.map(q => `<label class="picker-question"><input type="checkbox" data-pick-question="${escapeHtml(q.id)}"><span><span class="picker-question-name"><b>专题第 ${numbers[q.id]} 题</b>　${escapeHtml(questionTitle(q))}</span><small>${escapeHtml(q.topic)} · 原第 ${q.number} 题</small></span></label>`).join('');
       return group(`p-${p}`,shortPaperLabel(items[0]),items,rows,expandMatches || editionIndex === 0 && paperIndex === 0);
     }).join('');
-    return group(`e-${e}`,editionLabel(e),editionQs,children,expandMatches || edition !== 'all' || editionIndex === 0);
+    return group(`e-${editionKey(e)}`,editionLabel(e.e,e.src),editionQs,children,expandMatches || edition !== 'all' || editionIndex === 0);
   }).join('') || `<p class="picker-empty">${$('picker-selected-only').checked ? '当前范围内没有已选题目。取消“只看已选”后继续选题。' : '没有符合条件的题目。试试其他名称、题号或筛选范围。'}</p>`;
   syncPickerSelection();
 }
@@ -101,7 +115,7 @@ function openPicker() {
   if (!ready) return;
   closePanel(false);
   $('picker-topic').innerHTML = option('all','全部专题',activeTopic)+topics.map(t => option(t,t,activeTopic)).join('');
-  $('picker-edition').innerHTML = option('all','全部届次',selectedEdition)+editionValues(questions).map(e => option(e,editionLabel(e),selectedEdition)).join('');
+  $('picker-edition').innerHTML = option('all','全部届次',selectedEdition)+editionValues(questions).map(g => option(editionKey(g),editionLabel(g.e,g.src),selectedEdition)).join('');
   if(showingFavorites){$('picker-topic').value='all';$('picker-edition').value='all';$('picker-favorites-only').checked=true;}
   $('picker-query').value = ''; $('picker-selected-only').checked = false;
   $('picker-tree').innerHTML = '';
@@ -202,9 +216,18 @@ function questionTitle(q, bodyText) {
 }
 function paperLabel(key) { return paperLabels.get(String(key)) || ''; }
 function shortPaperLabel(q) {
+  if (sourceOf(q) === 'guochu') return q.sourcePaperLabel || `国初真题`;
   return editionOf(q) === 0 ? `第${q.paper}届联赛` : q.sourcePaperLabel || `模拟试题 ${q.paper}`;
 }
-function editionValues(list) { return [...new Set(list.map(editionOf))].sort((a,b) => b-a); }
+function editionValues(list) {
+  const groups = new Map();
+  for (const q of list) {
+    const k = groupKeyOf(q);
+    if (!groups.has(k)) groups.set(k, {e: realEditionOf(q), src: sourceOf(q)});
+  }
+  return [...groups.values()].sort((a,b) => b.e - a.e || sourceRank(a.src) - sourceRank(b.src));
+}
+const editionKey = g => `${g.e}-${g.src}`;
 function option(value, label, selected) {
   return `<option value="${escapeHtml(value)}"${String(value) === String(selected) ? ' selected' : ''}>${escapeHtml(label)}</option>`;
 }
@@ -241,22 +264,22 @@ function readUrl() {
   activeQuestion = params.get('question') || '';
   const q = byId.get(activeQuestion);
   if (q && q.topic === activeTopic) {
-    if (selectedEdition !== 'all' && String(editionOf(q)) !== selectedEdition) selectedEdition = 'all';
+    if (selectedEdition !== 'all' && groupKeyOf(q) !== selectedEdition) selectedEdition = 'all';
     if (selectedPaper !== 'all' && paperKey(q) !== selectedPaper) selectedPaper = 'all';
   } else activeQuestion = '';
   lastUrl = location.href;
 }
 function currentList() {
-  return (byTopic.get(activeTopic) || []).filter(q => (selectedEdition === 'all' || String(editionOf(q)) === selectedEdition) && (selectedPaper === 'all' || paperKey(q) === selectedPaper));
+  return (byTopic.get(activeTopic) || []).filter(q => (selectedEdition === 'all' || groupKeyOf(q) === selectedEdition) && (selectedPaper === 'all' || paperKey(q) === selectedPaper));
 }
 function renderFilters() {
   const all = byTopic.get(activeTopic) || [];
   const editions = editionValues(all);
-  if (selectedEdition !== 'all' && !editions.map(String).includes(selectedEdition)) selectedEdition = 'all';
-  const candidates = all.filter(q => selectedEdition === 'all' || String(editionOf(q)) === selectedEdition);
-  const papers = [...new Set(candidates.map(paperKey))];
+  if (selectedEdition !== 'all' && !editions.map(editionKey).includes(selectedEdition)) selectedEdition = 'all';
+  const candidates = all.filter(q => selectedEdition === 'all' || groupKeyOf(q) === selectedEdition);
+  const papers = [...new Set(candidates.map(paperKey))].sort((a,b) => { const qa=candidates.find(q=>paperKey(q)===a), qb=candidates.find(q=>paperKey(q)===b); return qa.number-qb.number || a.localeCompare(b); });
   if (selectedPaper !== 'all' && !papers.includes(selectedPaper)) selectedPaper = 'all';
-  $('edition-select').innerHTML = option('all','全部届次',selectedEdition) + editions.map(e => option(e,editionLabel(e),selectedEdition)).join('');
+  $('edition-select').innerHTML = option('all','全部届次',selectedEdition) + editions.map(g => option(editionKey(g),editionLabel(g.e,g.src),selectedEdition)).join('');
   $('paper-select').innerHTML = option('all','全部试卷',selectedPaper) + papers.map(p => option(p,paperLabel(p),selectedPaper)).join('');
   $('edition-select').disabled = $('paper-select').disabled = false;
   $('number-jump').querySelector('button').disabled = false;
@@ -268,11 +291,14 @@ function renderDirectory(list) {
     expandedByTopic.set(activeTopic,expanded);
   }
   $('directory-count').textContent = `${list.length} 道题 · 点击标题定位原题`;
-  $('directory-tree').innerHTML = editionValues(list).map(e => {
-    const editionQs = list.filter(q => editionOf(q) === e);
-    const ekey = `edition-${e}`;
-    const papers = [...new Set(editionQs.map(paperKey))];
-    return `<details class="edition-group" data-group="${ekey}"${expanded.has(ekey) ? ' open' : ''}><summary>${editionLabel(e)}<span class="group-count">${editionQs.length} 题</span></summary>${papers.map(p => {
+  $('directory-tree').innerHTML = editionValues(list).map(g => {
+    const editionQs = list.filter(q => groupKeyOf(q) === editionKey(g));
+    const ekey = `edition-${editionKey(g)}`;
+    const papers = [...new Set(editionQs.map(paperKey))].sort((a,b) => {
+      const qa=editionQs.find(q=>paperKey(q)===a), qb=editionQs.find(q=>paperKey(q)===b);
+      return (qa?.number||0)-(qb?.number||0) || a.localeCompare(b);
+    });
+    return `<details class="edition-group" data-group="${ekey}"${expanded.has(ekey) ? ' open' : ''}><summary>${editionLabel(g.e,g.src)}<span class="group-count">${editionQs.length} 题</span></summary>${papers.map(p => {
       const items = editionQs.filter(q => paperKey(q) === p);
       const pkey = `paper-${p}`;
       return `<details class="paper-group" data-group="${pkey}"${expanded.has(pkey) ? ' open' : ''}><summary>${escapeHtml(shortPaperLabel(items[0]))}<span class="group-count">${items.length} 题</span></summary>${items.map(q => `<a class="directory-item" href="?question=${encodeURIComponent(q.id)}#${slugByTopic[q.topic]}" data-question="${escapeHtml(q.id)}"><span class="directory-number">专题第 ${numbers[q.id]} 题</span>${escapeHtml(questionTitle(q))}</a>`).join('')}</details>`;
@@ -326,7 +352,7 @@ function render() {
   const all = byTopic.get(activeTopic) || [], list = currentList();
   document.title = `${activeTopic} · 化学竞赛专题题库`;
   $('topic-title').textContent = activeTopic;
-  const range = selectedPaper !== 'all' ? paperLabel(selectedPaper) : selectedEdition !== 'all' ? editionLabel(selectedEdition) : `${new Set(list.map(paperKey)).size} 份试卷`;
+  const range = selectedPaper !== 'all' ? paperLabel(selectedPaper) : selectedEdition !== 'all' ? (()=>{const [es,ss]=selectedEdition.split('-');return editionLabel(Number(es),ss);})() : `${new Set(list.map(paperKey)).size} 份试卷`;
   $('topic-summary').textContent = `${list.length} 道完整大题 · ${range}`;
   $('downloads').innerHTML = selectedEdition === '40'
     ? `<a class="download" href="${PDF_BASE}chemy40-questions.pdf?v=edition40-v1" download title="下载chemy第40届题目合集原卷（22 套，全部专题）">chemy第40届题目合集 PDF</a><a class="download" href="${PDF_BASE}chemy40-answers.pdf?v=edition40-v1" download title="下载第40届参考答案合集原卷（22 套，全部专题）">第40届答案合集 PDF</a>`
@@ -451,7 +477,7 @@ function prepareSearchIndex() {
 }
 function refreshSearchPapers() {
   const topic = $('search-topic').value, edition = $('search-edition').value, selected = $('search-paper').value;
-  const candidates = questions.filter(q => (topic === 'all' || q.topic === topic) && (edition === 'all' || String(editionOf(q)) === edition));
+  const candidates = questions.filter(q => (topic === 'all' || q.topic === topic) && (edition === 'all' || groupKeyOf(q) === edition));
   const keys = [...new Set(candidates.map(paperKey))];
   $('search-paper').innerHTML = option('all','全部试卷',selected) + keys.map(key => option(key,paperLabel(key),selected)).join('');
   if (!keys.includes(selected)) $('search-paper').value = 'all';
@@ -505,7 +531,7 @@ async function runSearch() {
   $('search-status').textContent = searchIndex ? '正在查找…' : '正在准备搜索，请稍候…';
   await prepareSearchIndex();
   if (JSON.stringify(searchState()) !== signature) return;
-  const candidates = searchIndex.filter(item => (state.topic === 'all' || item.q.topic === state.topic) && (state.edition === 'all' || String(editionOf(item.q)) === state.edition) && (state.paper === 'all' || paperKey(item.q) === state.paper));
+  const candidates = searchIndex.filter(item => (state.topic === 'all' || item.q.topic === state.topic) && (state.edition === 'all' || groupKeyOf(item.q) === state.edition) && (state.paper === 'all' || paperKey(item.q) === state.paper));
   const matches = [];
   for (const item of candidates) {
     const mainMatch = terms.every(term => item.titleLower.includes(term) || item.bodyLower.includes(term));
@@ -633,7 +659,7 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 
 async function loadLibrary() {
   try {
-    const [data,numbering,summaryData] = await Promise.all(['questions.json?v=mineru-all-v12','numbering.json?v=mineru-all-v12','summaries.json?v=mineru-all-v12'].map(async path => {
+    const [data,numbering,summaryData] = await Promise.all(['questions.json?v=mineru-all-v13','numbering.json?v=mineru-all-v13','summaries.json?v=mineru-all-v13'].map(async path => {
       // Big JSONs (questions/presentation ~40MB) must load from the same origin: the racing mirror often returns a truncated stream and response.json() then throws -> whole site shows '无法加载'.
       let response;
       try { response = await fetch(path); }
@@ -645,10 +671,10 @@ async function loadLibrary() {
     if (questions.some(q => !Number.isInteger(numbers[q.id]) || summaries[q.id] === undefined)) throw new Error('编号与题库不一致');
     topicIndex = Object.fromEntries(topics.map((t,i)=>[t,i]));
     byId = new Map(questions.map(q => [q.id,q])); byTopic = new Map(topics.map(t => [t,questions.filter(q => q.topic === t)]));
-    for (const q of questions) paperLabels.set(paperKey(q),editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `${editionOf(q) === 41 ? '化英社40届' : 'chemy第'+editionOf(q)+'届'} · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
+    for (const q of questions) paperLabels.set(paperKey(q),sourceOf(q)==='guochu' ? `第${realEditionOf(q)}届国初真题` : editionOf(q) === 0 ? `第${q.paper}届化学联赛` : `${editionOf(q) === 41 ? '化英社40届' : 'chemy第'+editionOf(q)+'届'} · ${q.sourcePaperLabel || '模拟试题 '+q.paper}`);
     $('library-status').textContent = `${questions.length} 道题 · ${new Set(questions.map(paperKey)).size} 份试卷`;
     $('search-topic').innerHTML = option('all','全部专题','all')+topics.map(t => option(t,t,'all')).join('');
-    $('search-edition').innerHTML = option('all','全部届次','all')+editionValues(questions).map(e => option(e,editionLabel(e),'all')).join('');
+    $('search-edition').innerHTML = option('all','全部届次','all')+editionValues(questions).map(g => option(editionKey(g),editionLabel(g.e,g.src),'all')).join('');
     refreshSearchPapers(); ready = true; $('search-launch').disabled = false;
     document.dispatchEvent(new Event('chemy-library-ready'));
     readUrl(); const target = activeQuestion;
