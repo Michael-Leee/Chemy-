@@ -4,7 +4,7 @@ const topics = ['有机化学','高分子化学','晶体化学','无机综合与
 const slugs = ['organic','polymer','crystal','inference','elements','equilibrium','electrochemistry','kinetics','analysis'];
 const slugByTopic = Object.fromEntries(topics.map((t,i) => [t,slugs[i]]));
 const PDF_BASE = 'https://raw.githubusercontent.com/Michael-Leee/OlympiadChem-Drill/main/dist/downloads/';
-const ASSET_VER = 'mineru-all-v13';  // PDFs served from raw: excluded from Pages artifact (size limit)
+const ASSET_VER = 'mineru-all-v14';  // PDFs served from raw: excluded from Pages artifact (size limit)
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const realEditionOf = q => q.realEdition ?? q.edition ?? 39;
@@ -659,7 +659,7 @@ window.addEventListener('resize',() => { if (ready && selectedQuestions.size) up
 
 async function loadLibrary() {
   try {
-    const [data,numbering,summaryData] = await Promise.all(['questions.json?v=mineru-all-v13','numbering.json?v=mineru-all-v13','summaries.json?v=mineru-all-v13'].map(async path => {
+    const [data,numbering,summaryData] = await Promise.all(['questions.json?v=mineru-all-v14','numbering.json?v=mineru-all-v14','summaries.json?v=mineru-all-v14'].map(async path => {
       // Big JSONs (questions/presentation ~40MB) must load from the same origin: the racing mirror often returns a truncated stream and response.json() then throws -> whole site shows '无法加载'.
       let response;
       try { response = await fetch(path); }
